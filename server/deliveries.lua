@@ -136,9 +136,9 @@ function GetCurrentCops()
     return amount
 end
 
-QBCore.Commands.Add("plaatsdealer", "Place a dealer", {
+QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {
     {name = "naam", help = "Dealer name"},
-    {name = "min", help = "Minium time"},
+    {name = "min", help = "Minimum time"},
     {name = "max", help = "Maximum time"},
 }, true, function(source, args)
     local dealerName = args[1]
@@ -148,7 +148,7 @@ QBCore.Commands.Add("plaatsdealer", "Place a dealer", {
     TriggerClientEvent('qb-drugs:client:CreateDealer', source, dealerName, mintime, maxtime)
 end, "admin")
 
-QBCore.Commands.Add("verwijderdealer", "Plaats een dealer", {
+QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {
     {name = "naam", help = "Naam van de dealer"},
 }, true, function(source, args)
     local dealerName = args[1]
@@ -165,7 +165,7 @@ QBCore.Commands.Add("verwijderdealer", "Plaats een dealer", {
     end)
 end, "admin")
 
-QBCore.Commands.Add("dealers", "Get an overview of all Dealers", {}, false, function(source, args)
+QBCore.Commands.Add("dealers", "View All Dealers (Admin Only)", {}, false, function(source, args)
     local DealersText = ""
     if Config.Dealers ~= nil and next(Config.Dealers) ~= nil then
         for k, v in pairs(Config.Dealers) do
@@ -180,7 +180,7 @@ QBCore.Commands.Add("dealers", "Get an overview of all Dealers", {}, false, func
     end
 end, "admin")
 
-QBCore.Commands.Add("dealergoto", "Teleport to dealer location", {{name = "name", help = "Dealer name"}}, true, function(source, args)
+QBCore.Commands.Add("dealergoto", "Teleport To A Dealer (Admin Only)", {{name = "name", help = "Dealer name"}}, true, function(source, args)
     local DealerName = tostring(args[1])
 
     if Config.Dealers[DealerName] ~= nil then

@@ -242,7 +242,7 @@ function SellToPed(ped)
                 break
             else
                 if pedDist < 1.5 then
-                    QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for €'..randomPrice..'? / ~g~G~w~ Decline offer')
+                    QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for $'..randomPrice..'? / ~g~G~w~ Decline offer')
                     if IsControlJustPressed(0, Keys["E"]) then
                         QBCore.Functions.Notify('Offer accepted!', 'success')
                         TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)

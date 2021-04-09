@@ -75,7 +75,7 @@ Citizen.CreateThread(function()
                 local pedpos = GetEntityCoords(stealingPed)
                 if #(pos - pedpos) < 1.5 then
                     DrawText3D(pedpos.x, pedpos.y, pedpos.z, "[E] Pick up")
-                    if IsControlJustReleased(0, Keys["E"]) then
+                    if IsControlJustReleased(0, 38) then
                         RequestAnimDict("pickup_object")
                         while not HasAnimDictLoaded("pickup_object") do
                             Citizen.Wait(7)
@@ -243,7 +243,7 @@ function SellToPed(ped)
             else
                 if pedDist < 1.5 then
                     QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for $'..randomPrice..'? / ~g~G~w~ Decline offer')
-                    if IsControlJustPressed(0, Keys["E"]) then
+                    if IsControlJustPressed(0, 38) then
                         QBCore.Functions.Notify('Offer accepted!', 'success')
                         TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
                         hasTarget = false
@@ -260,7 +260,7 @@ function SellToPed(ped)
                         break
                     end
 
-                    if IsControlJustPressed(0, Keys["G"]) then
+                    if IsControlJustPressed(0, 47) then
                         QBCore.Functions.Notify('Offer canceled!', 'error')
                         hasTarget = false
 

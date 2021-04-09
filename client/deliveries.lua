@@ -39,7 +39,7 @@ Citizen.CreateThread(function()
                         if not dealerIsHome then
                             DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To knock')
 
-                            if IsControlJustPressed(0, Keys["E"]) then
+                            if IsControlJustPressed(0, 38) then
                                 currentDealer = id
                                 knockDealerDoor()
                             end
@@ -49,11 +49,11 @@ Citizen.CreateThread(function()
                             else
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Start a mission')
                             end
-                            if IsControlJustPressed(0, Keys["E"]) then
+                            if IsControlJustPressed(0, 38) then
                                 buyDealerStuff()
                             end
 
-                            if IsControlJustPressed(0, Keys["G"]) then
+                            if IsControlJustPressed(0, 47) then
                                 if dealer["name"] == "Mystery man" then
                                     local player, distance = GetClosestPlayer()
                                     if player ~= -1 and distance < 5.0 then
@@ -292,7 +292,7 @@ AddEventHandler('qb-drugs:client:setLocation', function(locationData)
                     if dist < 1.5 then
                         DrawText3D(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"], '[E] '..activeDelivery["amount"]..'x '..QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]..' deliver.')
 
-                        if IsControlJustPressed(0, Keys["E"]) then
+                        if IsControlJustPressed(0, 38) then
                             deliverStuff(activeDelivery)
                             activeDelivery = nil
                             waitingDelivery = nil

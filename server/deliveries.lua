@@ -153,9 +153,9 @@ QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {
 }, true, function(source, args)
     local dealerName = args[1]
     
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `dealers` WHERE `name` = '"..dealerName.."'", function(result)
+    QBCore.Functions.ExecuteSql(false, {['a']=dealerName}, "SELECT * FROM `dealers` WHERE `name` = @a", function(result)
         if result[1] ~= nil then
-            QBCore.Functions.ExecuteSql(false, "DELETE FROM `dealers` WHERE `name` = '"..dealerName.."'")
+            QBCore.Functions.ExecuteSql(false, {['a']=dealerName}, "DELETE FROM `dealers` WHERE `name` = @a")
             Config.Dealers[dealerName] = nil
             TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
             TriggerClientEvent('QBCore:Notify', source, "You deleted Dealer "..dealerName.."!", "success")
@@ -192,7 +192,7 @@ end, "admin")
 
 Citizen.CreateThread(function()
     Wait(500)
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `dealers`", function(dealers)
+    QBCore.Functions.ExecuteSql(false, nil, "SELECT * FROM `dealers`", function(dealers)
         if dealers[1] ~= nil then
             for k, v in pairs(dealers) do
                 local coords = json.decode(v.coords)
@@ -222,11 +222,19 @@ AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
 
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `dealers` WHERE `name` = '"..DealerData.name.."'", function(result)
+    QBCore.Functions.ExecuteSql(false, {['a']=DealerData.name}, "SELECT * FROM `dealers` WHERE `name` = @a", function(result)
         if result[1] ~= nil then
             TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
         else
-            QBCore.Functions.ExecuteSql(false, "INSERT INTO `dealers` (`name`, `coords`, `time`, `createdby`) VALUES ('"..DealerData.name.."', '"..json.encode(DealerData.pos).."', '"..json.encode(DealerData.time).."', '"..Player.PlayerData.citizenid.."')", function()
+            QBCore.Functions.ExecuteSql(
+                false, 
+                {
+                    ['a'] = DealerData.name,
+                    ['b'] = json.encode(DealerData.pos),
+                    ['c'] = json.encode(DealerData.time),
+                    ['d'] = Player.PlayerData.citizenid
+                }, 
+                "INSERT INTO `dealers` (`name`, `coords`, `time`, `createdby`) VALUES (@a, @b, @c, @d)", function()
                 Config.Dealers[DealerData.name] = {
                     ["name"] = DealerData.name,
                     ["coords"] = {

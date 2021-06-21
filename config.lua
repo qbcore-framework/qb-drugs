@@ -114,6 +114,24 @@ Config.Products = {
         slot = 10,
         minrep = 180,
     },
+    [11] = {
+        name = "cokebaggy",
+        price = 200,
+        amount = 150,
+        info = {},
+        type = "item",
+        slot = 11,
+        minrep = 10,
+    },
+    [12] = {
+        name = "crack_baggy",
+        price = 150,
+        amount = 150,
+        info = {},
+        type = "item",
+        slot = 12,
+        minrep = 10,
+    },
 }
 
 Config.Dealers = {}
@@ -125,6 +143,8 @@ Config.CornerSellingDrugsList = {
     "weed_og-kush",
     "weed_amnesia",
     "weed_ak47",
+    "cokebaggy",
+    "crack_baggy"
 }
 
 Config.DrugsPrice = {
@@ -152,6 +172,14 @@ Config.DrugsPrice = {
         min = 18,
         max = 40,
     },
+    ["cokebaggy"] = {
+        min = 250,
+        max = 500,
+    },
+    ["crack_baggy"] = {
+        min = 150,
+        max = 300,
+    }
 }
 
 Config.DeliveryLocations = {
@@ -199,6 +227,28 @@ Config.DeliveryLocations = {
 
 Config.CornerSellingZones = {
     [1] = {
+        ["coords"] = {
+            ["x"] = 295.14,
+            ["y"] = 181.55,
+            ["z"] = 104.25,
+        },
+        ["time"] = {
+            ["min"] = 1,
+            ["max"] = 100,
+        },
+    },
+	[2] = {
+        ["coords"] = {
+            ["x"] = 35.21,
+            ["y"] = -1889.84,
+            ["z"] = 22.13,
+        },
+        ["time"] = {
+            ["min"] = 1,
+            ["max"] = 100,
+        },
+    },
+    [3] = {
         ["coords"] = {
             ["x"] = -1415.53,
             ["y"] = -1041.51,

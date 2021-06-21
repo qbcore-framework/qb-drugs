@@ -44,7 +44,7 @@ Citizen.CreateThread(function()
                                 knockDealerDoor()
                             end
                         elseif dealerIsHome then
-                            if dealer["name"] == "Mystery man" then
+                            if dealer["name"] == "Mystery" then
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Help your guy ($5000)')
                             else
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Start a mission')
@@ -54,7 +54,7 @@ Citizen.CreateThread(function()
                             end
 
                             if IsControlJustPressed(0, 47) then
-                                if dealer["name"] == "Mystery man" then
+                                if dealer["name"] == "Mystery" then
                                     local player, distance = GetClosestPlayer()
                                     if player ~= -1 and distance < 5.0 then
                                         local playerId = GetPlayerServerId(player)
@@ -175,7 +175,7 @@ function knockDoorAnim(home)
         knockingDoor = false
         Citizen.Wait(1000)
         dealerIsHome = true
-        if Config.Dealers[currentDealer]["name"] == "Mystery man" then
+        if Config.Dealers[currentDealer]["name"] == "Mystery" then
             TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "normal", 'Hello my child, what can I do for you')
         elseif Config.Dealers[currentDealer]["name"] == "Fred" then
             dealerIsHome = false
@@ -226,7 +226,7 @@ function requestDelivery()
     SetTimeout(2000, function()
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[currentDealer]["name"],
-            subject = "Aflever Locatie",
+            subject = "Delivery Location",
             message = "Here is all info about the delivery, <br>Items: <br> "..amount.."x "..QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"].."<br><br> be in time!!",
             button = {
                 enabled = true,
@@ -417,19 +417,19 @@ AddEventHandler('qb-drugs:client:sendDeliveryMail', function(type, deliveryData)
     if type == 'perfect' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Levering",
+            subject = "Delivery",
             message = "You did good work, hope to see you again ;)<br><br>Groeten, "..Config.Dealers[deliveryData["dealer"]]["name"]
         })
     elseif type == 'bad' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Levering",
+            subject = "Delivery",
             message = "I have received complaints about your delivery, don\'t let this happen again..."
         })
     elseif type == 'late' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Levering",
+            subject = "Delivery",
             message = "You weren\'t on time. Did you have more important things to do than business?"
         })
     end

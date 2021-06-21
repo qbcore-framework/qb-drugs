@@ -137,7 +137,7 @@ function GetCurrentCops()
 end
 
 QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {
-    {name = "name", help = "Dealer name"},
+    {name = "Name", help = "Dealer name"},
     {name = "min", help = "Minimum time"},
     {name = "max", help = "Maximum time"},
 }, true, function(source, args)
@@ -149,7 +149,7 @@ QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {
 end, "admin")
 
 QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {
-    {name = "name", help = "Name of the dealer"},
+    {name = "Name", help = "Name of the dealer"},
 }, true, function(source, args)
     local dealerName = args[1]
     

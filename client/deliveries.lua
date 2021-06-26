@@ -490,5 +490,5 @@ AddEventHandler('qb-drugs:client:GotoDealer', function(DealerData)
     local ped = PlayerPedId()
 
     SetEntityCoords(ped, DealerData["coords"]["x"], DealerData["coords"]["y"], DealerData["coords"]["z"])
-    QBCore.Functions.Notify(DealerData["name"], 'success')
+    QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_event_GotoDealer_notify_1", DealerData["name"]), 'success')
 end)

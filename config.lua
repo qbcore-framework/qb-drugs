@@ -1,13 +1,13 @@
 Config = Config or {}
 
+Locales = Locales or {}
+
 local StringCharset = {}
 local NumberCharset = {}
 
 for i = 48,  57 do table.insert(NumberCharset, string.char(i)) end
 for i = 65,  90 do table.insert(StringCharset, string.char(i)) end
 for i = 97, 122 do table.insert(StringCharset, string.char(i)) end
-
-Config.Locale = "it"
 
 Config.RandomStr = function(length)
 	if length > 0 then

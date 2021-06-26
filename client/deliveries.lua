@@ -38,7 +38,7 @@ Citizen.CreateThread(function()
                     if not interacting then
                         if not dealerIsHome then
                             DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"],
-                                _U("client_deliveries_createthread_drawtext3d_1"))
+                                QBCore.Shared._U(Locales, "client_deliveries_createthread_drawtext3d_1"))
 
                             if IsControlJustPressed(0, 38) then
                                 currentDealer = id
@@ -47,10 +47,10 @@ Citizen.CreateThread(function()
                         elseif dealerIsHome then
                             if dealer["name"] == "Mystery man" then
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"],
-                                    _U("client_deliveries_createthread_drawtext3d_2"))
+                                    QBCore.Shared._U(Locales, "client_deliveries_createthread_drawtext3d_2"))
                             else
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"],
-                                    _U("client_deliveries_createthread_drawtext3d_3"))
+                                    QBCore.Shared._U(Locales, "client_deliveries_createthread_drawtext3d_3"))
                             end
                             if IsControlJustPressed(0, 38) then
                                 buyDealerStuff()
@@ -62,7 +62,7 @@ Citizen.CreateThread(function()
                                     if player ~= -1 and distance < 5.0 then
                                         local playerId = GetPlayerServerId(player)
                                         isHealingPerson = true
-                                        QBCore.Functions.Progressbar("hospital_revive", _U(
+                                        QBCore.Functions.Progressbar("hospital_revive", QBCore.Shared._U(Locales, 
                                             'client_deliveries_createthread_progressbar_1'), 5000, false, true, {
                                             disableMovement = false,
                                             disableCarMovement = false,
@@ -75,29 +75,29 @@ Citizen.CreateThread(function()
                                         }, {}, {}, function() -- Done
                                             isHealingPerson = false
                                             StopAnimTask(PlayerPedId(), healAnimDict, "exit", 1.0)
-                                            QBCore.Functions.Notify(_U("client_deliveries_createthread_notify_1"))
+                                            QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_createthread_notify_1"))
                                             TriggerServerEvent("hospital:server:RevivePlayer", playerId, true)
                                         end, function() -- Cancel
                                             isHealingPerson = false
                                             StopAnimTask(PlayerPedId(), healAnimDict, "exit", 1.0)
-                                            QBCore.Functions.Notify(_U('client_deliveries_createthread_notify_2'),
+                                            QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_deliveries_createthread_notify_2'),
                                                 "error")
                                         end)
                                     else
-                                        QBCore.Functions.Notify(_U("client_deliveries_createthread_notify_3"), "error")
+                                        QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_createthread_notify_3"), "error")
                                     end
                                 else
                                     if waitingDelivery == nil then
-                                        TriggerEvent("chatMessage", _U("client_deliveries_chatmessage_dealer_sender",
+                                        TriggerEvent("chatMessage", QBCore.Shared._U(Locales, "client_deliveries_chatmessage_dealer_sender",
                                             Config.Dealers[currentDealer]["name"]),
-                                            _U("client_deliveries_createthread_chatmessage_1_receiver"))
+                                            QBCore.Shared._U(Locales, "client_deliveries_createthread_chatmessage_1_receiver"))
                                         requestDelivery()
                                         interacting = false
                                         dealerIsHome = false
                                     else
-                                        TriggerEvent("chatMessage", _U("client_deliveries_chatmessage_dealer_sender",
+                                        TriggerEvent("chatMessage", QBCore.Shared._U(Locales, "client_deliveries_chatmessage_dealer_sender",
                                             Config.Dealers[currentDealer]["name"]), "error",
-                                            _U("client_deliveries_createthread_chatmessage_2_receiver"))
+                                            QBCore.Shared._U(Locales, "client_deliveries_createthread_chatmessage_2_receiver"))
                                     end
                                 end
                             end
@@ -187,16 +187,16 @@ function knockDoorAnim(home)
         dealerIsHome = true
         if Config.Dealers[currentDealer]["name"] == "Mystery man" then
             TriggerEvent("chatMessage",
-                _U("client_deliveries_chatmessage_dealer_sender", Config.Dealers[currentDealer]["name"]), "normal",
-                _U("client_deliveries_function_knockDoorAnim_chatMessage_1_receiver"))
+                QBCore.Shared._U(Locales, "client_deliveries_chatmessage_dealer_sender", Config.Dealers[currentDealer]["name"]), "normal",
+                QBCore.Shared._U(Locales, "client_deliveries_function_knockDoorAnim_chatMessage_1_receiver"))
         elseif Config.Dealers[currentDealer]["name"] == "Fred" then
             dealerIsHome = false
             TriggerEvent("chatMessage",
-                _U("client_deliveries_chatmessage_dealer_sender", Config.Dealers[currentDealer]["name"]), "normal",
-                _U("client_deliveries_function_knockDoorAnim_chatMessage_2_receiver"))
+                QBCore.Shared._U(Locales, "client_deliveries_chatmessage_dealer_sender", Config.Dealers[currentDealer]["name"]), "normal",
+                QBCore.Shared._U(Locales, "client_deliveries_function_knockDoorAnim_chatMessage_2_receiver"))
         else
             TriggerEvent("chatMessage",
-                _U("client_deliveries_chatmessage_dealer_sender", Config.Dealers[currentDealer]["name"]), "normal", _U(
+                QBCore.Shared._U(Locales, "client_deliveries_chatmessage_dealer_sender", Config.Dealers[currentDealer]["name"]), "normal", QBCore.Shared._U(Locales, 
                     "client_deliveries_function_knockDoorAnim_chatMessage_3_receiver", myData.charinfo.firstname))
         end
         -- knockTimeout()
@@ -213,7 +213,7 @@ function knockDoorAnim(home)
         TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
         knockingDoor = false
         Citizen.Wait(1000)
-        QBCore.Functions.Notify(_U("client_deliveries_function_knockDoorAnim_notify_1"), 'error', 3500)
+        QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_function_knockDoorAnim_notify_1"), 'error', 3500)
     end
 end
 
@@ -243,8 +243,8 @@ function requestDelivery()
     SetTimeout(2000, function()
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[currentDealer]["name"],
-            subject = _U("client_deliveries_event_giveDeliveryItems_subject"),
-            message = _U("client_deliveries_event_giveDeliveryItems_message", amount,
+            subject = QBCore.Shared._U(Locales, "client_deliveries_event_giveDeliveryItems_subject"),
+            message = QBCore.Shared._U(Locales, "client_deliveries_event_giveDeliveryItems_message", amount,
                 QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"]),
             button = {
                 enabled = true,
@@ -276,7 +276,7 @@ end
 
 function setMapBlip(x, y)
     SetNewWaypoint(x, y)
-    QBCore.Functions.Notify(_U("client_deliveries_function_setMapBlip_notify_1"), 'success');
+    QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_function_setMapBlip_notify_1"), 'success');
 end
 
 RegisterNetEvent('qb-drugs:client:setLocation')
@@ -285,7 +285,7 @@ AddEventHandler('qb-drugs:client:setLocation', function(locationData)
         activeDelivery = locationData
     else
         setMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
-        QBCore.Functions.Notify(_U("client_deliveries_event_setLocation_notify"))
+        QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_event_setLocation_notify"))
         return
     end
 
@@ -311,7 +311,7 @@ AddEventHandler('qb-drugs:client:setLocation', function(locationData)
                     inDeliveryRange = true
                     if dist < 1.5 then
                         DrawText3D(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"],
-                            activeDelivery["coords"]["z"], _U("", activeDelivery["amount"],
+                            activeDelivery["coords"]["z"], QBCore.Shared._U(Locales, "", activeDelivery["amount"],
                                 QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]))
 
                         if IsControlJustPressed(0, 38) then
@@ -357,7 +357,7 @@ function deliverStuff(activeDelivery)
         Citizen.Wait(500)
         TriggerEvent('animations:client:EmoteCommandStart', {"bumbin"})
         checkPedDistance()
-        QBCore.Functions.Progressbar("work_dropbox", _U("client_deliveries_function_deliverStuff_Progressbar_1"), 3500,
+        QBCore.Functions.Progressbar("work_dropbox", QBCore.Shared._U(Locales, "client_deliveries_function_deliverStuff_Progressbar_1"), 3500,
             false, true, {
                 disableMovement = true,
                 disableCarMovement = true,
@@ -367,7 +367,7 @@ function deliverStuff(activeDelivery)
                 TriggerServerEvent('qb-drugs:server:succesDelivery', activeDelivery, true)
             end, function() -- Cancel
                 ClearPedTasks(PlayerPedId())
-                QBCore.Functions.Notify(_U("client_deliveries_function_deliverStuff_notify_1"), "error")
+                QBCore.Functions.Notify(QBCore.Shared._U(Locales, "client_deliveries_function_deliverStuff_notify_1"), "error")
             end)
     else
         TriggerServerEvent('qb-drugs:server:succesDelivery', activeDelivery, false)
@@ -413,7 +413,7 @@ end
 RegisterNetEvent('qb-drugs:client:robberyCall')
 AddEventHandler('qb-drugs:client:robberyCall', function(msg, streetLabel, coords)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
-    TriggerEvent("chatMessage", _U("client_deliveries_event_robberyCall_chatmessage"), "error", msg)
+    TriggerEvent("chatMessage", QBCore.Shared._U(Locales, "client_deliveries_event_robberyCall_chatmessage"), "error", msg)
     local transG = 250
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(blip, 458)
@@ -422,7 +422,7 @@ AddEventHandler('qb-drugs:client:robberyCall', function(msg, streetLabel, coords
     SetBlipAlpha(blip, transG)
     SetBlipScale(blip, 1.0)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentString(_U("client_deliveries_event_robberyCall_AddTextComponentString"))
+    AddTextComponentString(QBCore.Shared._U(Locales, "client_deliveries_event_robberyCall_AddTextComponentString"))
     EndTextCommandSetBlipName(blip)
     while transG ~= 0 do
         Wait(180 * 4)
@@ -441,21 +441,21 @@ AddEventHandler('qb-drugs:client:sendDeliveryMail', function(type, deliveryData)
     if type == 'perfect' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = _U("client_deliveries_event_sendDeliveryMail_subject"),
-            message = _U("client_deliveries_event_sendDeliveryMail_message_1",
+            subject = QBCore.Shared._U(Locales, "client_deliveries_event_sendDeliveryMail_subject"),
+            message = QBCore.Shared._U(Locales, "client_deliveries_event_sendDeliveryMail_message_1",
                 Config.Dealers[deliveryData["dealer"]]["name"])
         })
     elseif type == 'bad' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = _U("client_deliveries_event_sendDeliveryMail_subject"),
-            message = _U("client_deliveries_event_sendDeliveryMail_message_2")
+            subject = QBCore.Shared._U(Locales, "client_deliveries_event_sendDeliveryMail_subject"),
+            message = QBCore.Shared._U(Locales, "client_deliveries_event_sendDeliveryMail_message_2")
         })
     elseif type == 'late' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = _U("client_deliveries_event_sendDeliveryMail_subject"),
-            message = _U("client_deliveries_event_sendDeliveryMail_message_3")
+            subject = QBCore.Shared._U(Locales, "client_deliveries_event_sendDeliveryMail_subject"),
+            message = QBCore.Shared._U(Locales, "client_deliveries_event_sendDeliveryMail_message_3")
         })
     end
 end)

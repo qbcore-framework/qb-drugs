@@ -36,7 +36,7 @@ AddEventHandler('qb-drugs:server:sellCornerDrugs', function(item, amount, price)
     for i = 1, #Config.CornerSellingDrugsList, 1 do
         local item = Player.Functions.GetItemByName(Config.CornerSellingDrugsList[i])
 
-        if item ~= nil then
+        if item > 0 then
             table.insert(AvailableDrugs, {
                 item = item.name,
                 amount = item.amount,
@@ -61,7 +61,7 @@ AddEventHandler('qb-drugs:server:robCornerDrugs', function(item, amount, price)
     for i = 1, #Config.CornerSellingDrugsList, 1 do
         local item = Player.Functions.GetItemByName(Config.CornerSellingDrugsList[i])
 
-        if item ~= nil then
+        if item > 0 then
             table.insert(AvailableDrugs, {
                 item = item.name,
                 amount = item.amount,

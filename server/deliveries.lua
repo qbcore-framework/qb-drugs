@@ -33,7 +33,7 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
     local curRep = Player.PlayerData.metadata["dealerrep"]
 
     if inTime then
-        if Player.Functions.GetItemByName('weed_brick') ~= nil and Player.Functions.GetItemByName('weed_brick').amount >= deliveryData["amount"] then
+        if Player.Functions.GetItemByName('weed_brick') > 0 and Player.Functions.GetItemByName('weed_brick').amount >= deliveryData["amount"] then
             Player.Functions.RemoveItem('weed_brick', deliveryData["amount"])
             local cops = GetCurrentCops()
             local price = 3000

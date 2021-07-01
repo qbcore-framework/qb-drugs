@@ -41,7 +41,7 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
 end)
 
 function toFarAway()
-    QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'cornerselling_toFarAway_notify'), 'error')
+    QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_toFarAway_notify'), 'error')
     cornerselling = false
     hasTarget = false
     busySelling = false

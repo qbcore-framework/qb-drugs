@@ -9,7 +9,7 @@ AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, 
         Player.Functions.RemoveItem(itemData.name, amount)
         Player.Functions.AddMoney('cash', amount * Config.Dealers[dealer]["products"][itemData.slot].price)
 
-        TriggerClientEvent("QBCore:Notify", _src, "This item is not available.. You've got an refund.", "error")
+        TriggerClientEvent("QBCore:Notify", src, "This item is not available.. You've got an refund.", "error")
     end
 end)
 

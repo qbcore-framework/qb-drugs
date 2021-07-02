@@ -11,8 +11,7 @@ shared_scripts {
 
 client_scripts {
     'config.lua',
-	'locales/*.lua',
-
+    'locales/*.lua',
     'client/main.lua',
     'client/deliveries.lua',
     'client/cornerselling.lua'
@@ -20,8 +19,7 @@ client_scripts {
 
 server_scripts {
     'config.lua',
-	'locales/*.lua',
-    'server/main.lua',
+    'locales/*.lua',
     'server/deliveries.lua',
     'server/cornerselling.lua'
 }

@@ -26,12 +26,14 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
 
             if not cornerselling then
                 cornerselling = true
+                LocalPlayer.state:set("inv_busy", true, true)
                 QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_event_cornerselling_notify_1'))
                 startLocation = GetEntityCoords(PlayerPedId())
                 -- TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_CROSS_ROAD_WAIT", 0, false)
             else
                 cornerselling = false
-                QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_event_cornerselling_notify_2'))
+                LocalPlayer.state:set("inv_busy", false, true)
+                QBCore.Functions.Notify(QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_event_cornerselling_notify_2')))
                 -- ClearPedTasks(PlayerPedId())
             end
         else
@@ -241,10 +243,9 @@ function SellToPed(ped)
                 table.insert(lastPed, ped)
                 break
             else
-                if pedDist < 1.5 then
+                if pedDist < 1.5 and cornerselling then
                     QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, QBCore.Shared._U(Locales, "client_cornerselling_function_SellToPed_drawtext3d", bagAmount,currentOfferDrug.label, randomPrice))
                     if IsControlJustPressed(0, 38) then
-                        QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_function_SellToPed_notify_2'), 'success')
                         TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
                         hasTarget = false
 

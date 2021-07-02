@@ -67,7 +67,7 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
         else
             TriggerClientEvent('QBCore:Notify', src, QBCore.Shared._U(Locales, "server_deliveries_event_updateDealerItems_notify_3"), 'error')
 
-            if Player.Functions.GetItemByName('weed_brick').amount >= 0 then
+            if Player.Functions.GetItemByName('weed_brick').amount ~= nil then
                 Player.Functions.RemoveItem('weed_brick', Player.Functions.GetItemByName('weed_brick').amount)
                 Player.Functions.AddMoney('cash', (Player.Functions.GetItemByName('weed_brick').amount * 6000 / 100 * 5))
             end
@@ -153,9 +153,9 @@ QBCore.Commands.Add("deletedealer", QBCore.Shared._U(Locales, "server_deliveries
 }, true, function(source, args)
     local dealerName = args[1]
     
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `dealers` WHERE `name` = '"..dealerName.."'", function(result)
+    exports.ghmattimysql:execute('SELECT * FROM dealers WHERE name=@name', {['@name'] = dealerName}, function(result)
         if result[1] ~= nil then
-            QBCore.Functions.ExecuteSql(false, "DELETE FROM `dealers` WHERE `name` = '"..dealerName.."'")
+            exports.ghmattimysql:execute('DELETE FROM dealers WHERE name=@name', {['@name'] = dealerName})
             Config.Dealers[dealerName] = nil
             TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
             TriggerClientEvent('QBCore:Notify', source, QBCore.Shared._U(Locales, "server_deliveries_command_deletedealer_notify_1", dealerName), "success")
@@ -192,7 +192,7 @@ end, "admin")
 
 Citizen.CreateThread(function()
     Wait(500)
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `dealers`", function(dealers)
+    exports.ghmattimysql:execute('SELECT * FROM dealers', function(dealers)
         if dealers[1] ~= nil then
             for k, v in pairs(dealers) do
                 local coords = json.decode(v.coords)
@@ -221,12 +221,16 @@ RegisterServerEvent('qb-drugs:server:CreateDealer')
 AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `dealers` WHERE `name` = '"..DealerData.name.."'", function(result)
+    exports.ghmattimysql:execute('SELECT * FROM dealers WHERE name=@name', {['@name'] = DealerData.name}, function(result)
         if result[1] ~= nil then
             TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
         else
-            QBCore.Functions.ExecuteSql(false, "INSERT INTO `dealers` (`name`, `coords`, `time`, `createdby`) VALUES ('"..DealerData.name.."', '"..json.encode(DealerData.pos).."', '"..json.encode(DealerData.time).."', '"..Player.PlayerData.citizenid.."')", function()
+            exports.ghmattimysql:execute('INSERT INTO dealers (name, coords, time, createdby) VALUES (@name, @coords, @time, @createdby)', {
+                ['@name'] = DealerData.name,
+                ['@coords'] = json.encode(DealerData.pos),
+                ['@time'] = json.encode(DealerData.time),
+                ['@createdby'] = Player.PlayerData.citizenid
+            }, function()
                 Config.Dealers[DealerData.name] = {
                     ["name"] = DealerData.name,
                     ["coords"] = {

@@ -243,7 +243,7 @@ function SellToPed(ped)
                 if pedDist < 1.5 then
                     QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for $'..randomPrice..'? / ~g~G~w~ Decline offer')
                     if IsControlJustPressed(0, 38) then
-                        TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
+                        TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice, availableDrugs.amount)
                         hasTarget = false
 
                         loadAnimDict("gestures@f@standing@casual")

@@ -28,13 +28,12 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
                 cornerselling = true
                 QBCore.Functions.Notify('Flicked the cornerselling switch.. yeet')
                 startLocation = GetEntityCoords(PlayerPedId())
-                -- TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_CROSS_ROAD_WAIT", 0, false)
             else
                 cornerselling = false
                 QBCore.Functions.Notify('Corner selling position disabled .. yeet')
-                -- ClearPedTasks(PlayerPedId())
             end
         else
+            cornerselling = false
             QBCore.Functions.Notify('You aren\'t carrying any weed with you..', 'error')
         end
     end)
@@ -244,7 +243,6 @@ function SellToPed(ped)
                 if pedDist < 1.5 then
                     QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for $'..randomPrice..'? / ~g~G~w~ Decline offer')
                     if IsControlJustPressed(0, 38) then
-                        QBCore.Functions.Notify('Offer accepted!', 'success')
                         TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
                         hasTarget = false
 

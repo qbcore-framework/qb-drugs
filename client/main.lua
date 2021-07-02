@@ -1,12 +1,4 @@
-QBCore = nil
 CurrentCops = 0
-
-Citizen.CreateThread(function()
-    while QBCore == nil do
-    	TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
-    	Citizen.Wait(200)
-    end
-end)
 
 RegisterNetEvent('police:SetCopCount')
 AddEventHandler('police:SetCopCount', function(amount)

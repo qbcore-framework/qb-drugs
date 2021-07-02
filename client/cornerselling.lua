@@ -43,7 +43,8 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
 end)
 
 function toFarAway()
-    QBCore.Functions.Notify('You are moving too much, start over again!', 'error')
+    QBCore.Functions.Notify('Moved Too Far!', 'error')
+    LocalPlayer.state:set("inv_busy", false, true)
     cornerselling = false
     hasTarget = false
     busySelling = false

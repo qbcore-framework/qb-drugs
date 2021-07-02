@@ -27,13 +27,13 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
             if not cornerselling then
                 cornerselling = true
                 LocalPlayer.state:set("inv_busy", true, true)
-                QBCore.Functions.Notify('Flicked the cornerselling switch.. yeet')
+                QBCore.Functions.Notify('You started selling drugs')
                 startLocation = GetEntityCoords(PlayerPedId())
                 -- TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_CROSS_ROAD_WAIT", 0, false)
             else
                 cornerselling = false
                 LocalPlayer.state:set("inv_busy", false, true)
-                QBCore.Functions.Notify('Corner selling position disabled .. yeet')
+                QBCore.Functions.Notify('You stopped selling drugs')
                 -- ClearPedTasks(PlayerPedId())
             end
         else
@@ -274,10 +274,13 @@ function SellToPed(ped)
                     end
                 else
                     hasTarget = false
+                    pedDist = 5
                     SetPedKeepTask(ped, false)
                     SetEntityAsNoLongerNeeded(ped)
                     ClearPedTasksImmediately(ped)
                     table.insert(lastPed, ped)
+                    cornerselling = false
+                    currentPed = nil
                 end
             end
             

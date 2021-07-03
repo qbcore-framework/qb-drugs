@@ -9,7 +9,7 @@ AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, 
         Player.Functions.RemoveItem(itemData.name, amount)
         Player.Functions.AddMoney('cash', amount * Config.Dealers[dealer]["products"][itemData.slot].price)
 
-        TriggerClientEvent("QBCore:Notify", _src, QBCore.Shared._U(Locales, "server_deliveries_event_updateDealerItems_notify_1"), "error")
+        TriggerClientEvent("QBCore:Notify", src, QBCore.Shared._U(Locales, "server_deliveries_event_updateDealerItems_notify_1"), "error")
     end
 end)
 

@@ -44,6 +44,7 @@ end)
 
 function toFarAway()
     QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_toFarAway_notify'), 'error')
+    LocalPlayer.state:set("inv_busy", false, true)
     cornerselling = false
     hasTarget = false
     busySelling = false
@@ -273,10 +274,13 @@ function SellToPed(ped)
                     end
                 else
                     hasTarget = false
+                    pedDist = 5
                     SetPedKeepTask(ped, false)
                     SetEntityAsNoLongerNeeded(ped)
                     ClearPedTasksImmediately(ped)
                     table.insert(lastPed, ped)
+                    cornerselling = false
+                    currentPed = nil
                 end
             end
             

@@ -1,10 +1,10 @@
 Locales['en'] = {
     -- client/cornerselling.lua
 
-    ['client_cornerselling_event_cornerselling_notify_1'] = 'Flicked the cornerselling switch.. yeet',
-    ['client_cornerselling_event_cornerselling_notify_2'] = 'Corner selling position disabled .. yeet',
+    ['client_cornerselling_event_cornerselling_notify_1'] = 'You started selling drugs',
+    ['client_cornerselling_event_cornerselling_notify_2'] = 'You stopped selling drugs',
     ['client_cornerselling_event_cornerselling_notify_3'] = 'You aren\'t carrying any weed with you..',
-    ['client_cornerselling_toFarAway_notify'] = 'You are moving too much, start over again!',
+    ['client_cornerselling_toFarAway_notify'] = 'Moved Too Far!',
 
     ['client_cornerselling_createthread_drawtext3d'] = '[E] Pick up',
 

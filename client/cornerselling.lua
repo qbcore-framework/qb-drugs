@@ -38,6 +38,7 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
             end
         else
             QBCore.Functions.Notify(QBCore.Shared._U(Locales, 'client_cornerselling_event_cornerselling_notify_3'), 'error')
+           LocalPlayer.state:set("inv_busy", false, true)
         end
     end)
 end)
@@ -138,6 +139,11 @@ end)
 RegisterNetEvent('qb-drugs:client:refreshAvailableDrugs')
 AddEventHandler('qb-drugs:client:refreshAvailableDrugs', function(items)
     availableDrugs = items
+    if #availableDrugs <= 0 then
+        QBCore.Functions.Notify('No more drugs left to sell!', 'error')
+        cornerselling = false
+        LocalPlayer.state:set("inv_busy", false, true)
+    end
 end)
 
 function SellToPed(ped)

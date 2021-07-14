@@ -116,7 +116,176 @@ Config.Products = {
     },
 }
 
-Config.Dealers = {}
+Config.Dealers = {
+    [1] = {
+        ["name"] = "Alex",
+        ["coords"] = {
+            ["x"] = 764.44, 
+            ["y"] = -3207.92, 
+            ["z"] = 6.03, 
+        },
+        ["time"] = {
+            ["min"] = 9,
+            ["max"] = 15,
+        },
+        ["products"] = {
+            [1] = {
+                name = "weed_white-widow_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 1,
+                minrep = 50,
+            },
+            [2] = {
+                name = "weed_skunk_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 2,
+                minrep = 75,
+            },
+            [3] = {
+                name = "weed_purple-haze_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 3,
+                minrep = 100,
+            },
+            [4] = {
+                name = "weed_og-kush_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 4,
+                minrep = 125,
+            },
+            [5] = {
+                name = "weed_amnesia_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 5,
+                minrep = 150,
+            },
+            [6] = {
+                name = "weed_ak47_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 6,
+                minrep = 175,
+            }
+        },
+    },
+    [2] = {
+        ["name"] = "Osman",
+        ["coords"] = {
+            ["x"] = -1108.57, 
+            ["y"] = -1643.44, 
+            ["z"] = 4.64, 
+        },
+        ["time"] = {
+            ["min"] = 00,
+            ["max"] = 23,
+        },
+        ["products"] = {
+            [1] = {
+                name = "weed_white-widow_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 1,
+                minrep = 50,
+            },
+            [2] = {
+                name = "weed_skunk_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 2,
+                minrep = 75,
+            },
+            [3] = {
+                name = "weed_purple-haze_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 3,
+                minrep = 100,
+            },
+            [4] = {
+                name = "weed_og-kush_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 4,
+                minrep = 125,
+            },
+            [5] = {
+                name = "weed_amnesia_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 5,
+                minrep = 150,
+            },
+            [6] = {
+                name = "weed_ak47_seed",
+                price = 15,
+                amount = 25,
+                info = {},
+                type = "item",
+                slot = 6,
+                minrep = 175,
+            }
+        },
+    },
+    [3] = {
+        ["name"] = "Ouweheer",
+        ["coords"] = {
+            ["x"] = -50.25, 
+            ["y"] = 1911.26, 
+            ["z"] = 195.71,
+        },
+        ["time"] = {
+            ["min"] = 1,
+            ["max"] = 23,
+        },
+        ["products"] = {
+            [1] = {
+                name = "bandage",
+                price = 100,
+                amount = 50,
+                info = {},
+                type = "item",
+                slot = 1,
+                minrep = 0,
+            }
+            -- [2] = {
+            --     name = "painkillers",
+            --     price = 500,
+            --     amount = 2,
+            --     info = {},
+            --     type = "item",
+            --     slot = 2,
+            --     minrep = 0,
+            -- },
+        },
+    },
+}
 
 Config.CornerSellingDrugsList = {
     "weed_white-widow",

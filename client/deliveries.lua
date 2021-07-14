@@ -44,7 +44,7 @@ Citizen.CreateThread(function()
                                 knockDealerDoor()
                             end
                         elseif dealerIsHome then
-                            if dealer["name"] == "Mystery man" then
+                            if dealer["name"] == "Ouweheer" then
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Help your guy ($5000)')
                             else
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Start a mission')
@@ -54,7 +54,7 @@ Citizen.CreateThread(function()
                             end
 
                             if IsControlJustPressed(0, 47) then
-                                if dealer["name"] == "Mystery man" then
+                                if dealer["name"] == "Ouweheer" then
                                     local player, distance = GetClosestPlayer()
                                     if player ~= -1 and distance < 5.0 then
                                         local playerId = GetPlayerServerId(player)

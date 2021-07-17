@@ -226,7 +226,7 @@ function requestDelivery()
     SetTimeout(2000, function()
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[currentDealer]["name"],
-            subject = "Aflever Locatie",
+            subject = "Delivery Location",
             message = "Here is all info about the delivery, <br>Items: <br> "..amount.."x "..QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"].."<br><br> be in time!!",
             button = {
                 enabled = true,
@@ -417,19 +417,19 @@ AddEventHandler('qb-drugs:client:sendDeliveryMail', function(type, deliveryData)
     if type == 'perfect' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Levering",
+            subject = "Delivery",
             message = "You did good work, hope to see you again ;)<br><br>Groeten, "..Config.Dealers[deliveryData["dealer"]]["name"]
         })
     elseif type == 'bad' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Levering",
+            subject = "Delivery",
             message = "I have received complaints about your delivery, don\'t let this happen again..."
         })
     elseif type == 'late' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Levering",
+            subject = "Delivery",
             message = "You weren\'t on time. Did you have more important things to do than business?"
         })
     end

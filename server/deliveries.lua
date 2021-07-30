@@ -152,17 +152,15 @@ QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {
     {name = "name", help = "Name of the dealer"},
 }, true, function(source, args)
     local dealerName = args[1]
-    
-    exports.ghmattimysql:execute('SELECT * FROM dealers WHERE name=@name', {['@name'] = dealerName}, function(result)
-        if result[1] ~= nil then
-            exports.ghmattimysql:execute('DELETE FROM dealers WHERE name=@name', {['@name'] = dealerName})
-            Config.Dealers[dealerName] = nil
-            TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
-            TriggerClientEvent('QBCore:Notify', source, "You deleted Dealer "..dealerName.."!", "success")
-        else
-            TriggerClientEvent('QBCore:Notify', source, "Dealer "..dealerName.." doesn\'t exist..", "error")
-        end
-    end)
+    local result = exports.ghmattimysql:executeSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = dealerName})
+    if result[1] ~= nil then
+        exports.ghmattimysql:execute('DELETE FROM dealers WHERE name=@name', {['@name'] = dealerName})
+        Config.Dealers[dealerName] = nil
+        TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
+        TriggerClientEvent('QBCore:Notify', source, "Dealer: "..dealerName.." Has Been Deleted", "success")
+    else
+        TriggerClientEvent('QBCore:Notify', source, "Dealer: "..dealerName.." Doesn\'t Exist", "error")
+    end
 end, "admin")
 
 QBCore.Commands.Add("dealers", "View All Dealers (Admin Only)", {}, false, function(source, args)
@@ -192,63 +190,61 @@ end, "admin")
 
 Citizen.CreateThread(function()
     Wait(500)
-    exports.ghmattimysql:execute('SELECT * FROM dealers', function(dealers)
-        if dealers[1] ~= nil then
-            for k, v in pairs(dealers) do
-                local coords = json.decode(v.coords)
-                local time = json.decode(v.time)
+    local dealers = exports.ghmattimysql:executeSync('SELECT * FROM dealers')
+    if dealers[1] ~= nil then
+        for k, v in pairs(dealers) do
+            local coords = json.decode(v.coords)
+            local time = json.decode(v.time)
 
-                Config.Dealers[v.name] = {
-                    ["name"] = v.name,
-                    ["coords"] = {
-                        ["x"] = coords.x,
-                        ["y"] = coords.y,
-                        ["z"] = coords.z,
-                    },
-                    ["time"] = {
-                        ["min"] = time.min,
-                        ["max"] = time.max,
-                    },
-                    ["products"] = Config.Products,
-                }
-            end
+            Config.Dealers[v.name] = {
+                ["name"] = v.name,
+                ["coords"] = {
+                    ["x"] = coords.x,
+                    ["y"] = coords.y,
+                    ["z"] = coords.z,
+                },
+                ["time"] = {
+                    ["min"] = time.min,
+                    ["max"] = time.max,
+                },
+                ["products"] = Config.Products,
+            }
         end
-        TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
-    end)
+    end
+    TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
 end)
 
 RegisterServerEvent('qb-drugs:server:CreateDealer')
 AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    exports.ghmattimysql:execute('SELECT * FROM dealers WHERE name=@name', {['@name'] = DealerData.name}, function(result)
-        if result[1] ~= nil then
-            TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
-        else
-            exports.ghmattimysql:execute('INSERT INTO dealers (name, coords, time, createdby) VALUES (@name, @coords, @time, @createdby)', {
-                ['@name'] = DealerData.name,
-                ['@coords'] = json.encode(DealerData.pos),
-                ['@time'] = json.encode(DealerData.time),
-                ['@createdby'] = Player.PlayerData.citizenid
-            }, function()
-                Config.Dealers[DealerData.name] = {
-                    ["name"] = DealerData.name,
-                    ["coords"] = {
-                        ["x"] = DealerData.pos.x,
-                        ["y"] = DealerData.pos.y,
-                        ["z"] = DealerData.pos.z,
-                    },
-                    ["time"] = {
-                        ["min"] = DealerData.time.min,
-                        ["max"] = DealerData.time.max,
-                    },
-                    ["products"] = Config.Products,
-                }
+    local result = exports.ghmattimysql:executeSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = DealerData.name})
+    if result[1] ~= nil then
+        TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
+    else
+        exports.ghmattimysql:execute('INSERT INTO dealers (name, coords, time, createdby) VALUES (@name, @coords, @time, @createdby)', {
+            ['@name'] = DealerData.name,
+            ['@coords'] = json.encode(DealerData.pos),
+            ['@time'] = json.encode(DealerData.time),
+            ['@createdby'] = Player.PlayerData.citizenid
+        }, function()
+            Config.Dealers[DealerData.name] = {
+                ["name"] = DealerData.name,
+                ["coords"] = {
+                    ["x"] = DealerData.pos.x,
+                    ["y"] = DealerData.pos.y,
+                    ["z"] = DealerData.pos.z,
+                },
+                ["time"] = {
+                    ["min"] = DealerData.time.min,
+                    ["max"] = DealerData.time.max,
+                },
+                ["products"] = Config.Products,
+            }
 
-                TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
-            end)
-        end
-    end)
+            TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
+        end)
+    end
 end)
 
 function GetDealers()

@@ -37,7 +37,7 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
                 -- ClearPedTasks(PlayerPedId())
             end
         else
-            QBCore.Functions.Notify('You aren\'t carrying any weed with you..', 'error')
+            QBCore.Functions.Notify('You aren\'t carrying any drugs with you..', 'error')
             LocalPlayer.state:set("inv_busy", false, true)
         end
     end)

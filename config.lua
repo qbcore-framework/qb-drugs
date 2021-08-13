@@ -1,4 +1,5 @@
 Config = Config or {}
+Config.MinimumDrugSalePolice = 2
 
 local StringCharset = {}
 local NumberCharset = {}

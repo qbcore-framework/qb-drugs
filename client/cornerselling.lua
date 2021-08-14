@@ -1,6 +1,9 @@
 cornerselling = false
 hasTarget = false
 busySelling = false
+CurrentCops = 0
+PlayerJob = {}
+onDuty = false
 
 startLocation = nil
 
@@ -21,26 +24,52 @@ local policeMessage = {
 RegisterNetEvent('qb-drugs:client:cornerselling')
 AddEventHandler('qb-drugs:client:cornerselling', function(data)
     QBCore.Functions.TriggerCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(result)
-        if result ~= nil then
-            availableDrugs = result
+        if CurrentCops >= Config.MinimumDrugSalePolice then
+            if result ~= nil then
+                availableDrugs = result
 
-            if not cornerselling then
-                cornerselling = true
-                LocalPlayer.state:set("inv_busy", true, true)
-                QBCore.Functions.Notify('You started selling drugs')
-                startLocation = GetEntityCoords(PlayerPedId())
-                -- TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_CROSS_ROAD_WAIT", 0, false)
+                if not cornerselling then
+                    cornerselling = true
+                    LocalPlayer.state:set("inv_busy", true, true)
+                    QBCore.Functions.Notify('You started selling drugs')
+                    startLocation = GetEntityCoords(PlayerPedId())
+                    -- TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_CROSS_ROAD_WAIT", 0, false)
+                else
+                    cornerselling = false
+                    LocalPlayer.state:set("inv_busy", false, true)
+                    QBCore.Functions.Notify('You stopped selling drugs')
+                    -- ClearPedTasks(PlayerPedId())
+                end
             else
-                cornerselling = false
+                QBCore.Functions.Notify('You aren\'t carrying any drugs with you..', 'error')
                 LocalPlayer.state:set("inv_busy", false, true)
-                QBCore.Functions.Notify('You stopped selling drugs')
-                -- ClearPedTasks(PlayerPedId())
             end
         else
-            QBCore.Functions.Notify('You aren\'t carrying any drugs with you..', 'error')
-            LocalPlayer.state:set("inv_busy", false, true)
+            QBCore.Functions.Notify("There Are Not Enough Police On Duty (".. Config.MinimumDrugSalePolice .." Required)", "error")
         end
     end)
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
+AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+    PlayerJob = QBCore.Functions.GetPlayerData().job
+    onDuty = true
+end)
+
+RegisterNetEvent('QBCore:Client:SetDuty')
+AddEventHandler('QBCore:Client:SetDuty', function(duty)
+    onDuty = duty
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate')
+AddEventHandler('QBCore:Client:OnJobUpdate', function(JobInfo)
+    PlayerJob = JobInfo
+    onDuty = true
+end)
+
+RegisterNetEvent('police:SetCopCount')
+AddEventHandler('police:SetCopCount', function(amount)
+    CurrentCops = amount
 end)
 
 function toFarAway()

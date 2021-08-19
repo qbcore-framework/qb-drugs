@@ -173,29 +173,29 @@ Config.DrugsPrice = {
 Config.DeliveryLocations = {
     [1] = {
         ["label"] = "Stripclub",
-		vector(106.24, -1280.32, 29.24),
+		["coords"] = vector(106.24, -1280.32, 29.24),
     },
     [2] = {
         ["label"] = "Vinewood Video",
-		vector(223.98, 121.53, 102.76),
+		["coords"] = vector(223.98, 121.53, 102.76),
     },
     [3] = {
         ["label"] = "Vinewood Video",
-        	vector(223.98, 121.53, 102.76),
+        	["coords"] = vector(223.98, 121.53, 102.76),
     },
     [4] = {
         ["label"] = "Resort",
-		vector(-1245.63, 376.21, 75.34),
+		["coords"] = vector(-1245.63, 376.21, 75.34),
     },
     [5] = {
         ["label"] = "Bahama Mamas",
-		vector(-1383.1, -639.99, 28.67),
+		["coords"] = vector(-1383.1, -639.99, 28.67),
     },
 }
 
 Config.CornerSellingZones = {
     [1] = {
-	vector(-1415.53, -1041.51, 4.62),
+	["coords"] = vector(-1415.53, -1041.51, 4.62),
         ["time"] = {
             ["min"] = 12,
             ["max"] = 18,

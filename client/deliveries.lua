@@ -44,7 +44,7 @@ Citizen.CreateThread(function()
                                 knockDealerDoor()
                             end
                         elseif dealerIsHome then
-                            if dealer["name"] == "Mystery man" then
+                            if dealer["name"] == "RickRoss" then
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Help your guy ($5000)')
                             else
                                 DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Start a mission')
@@ -54,7 +54,7 @@ Citizen.CreateThread(function()
                             end
 
                             if IsControlJustPressed(0, 47) then
-                                if dealer["name"] == "Mystery man" then
+                                if dealer["name"] == "RickRoss" then
                                     local player, distance = GetClosestPlayer()
                                     if player ~= -1 and distance < 5.0 then
                                         local playerId = GetPlayerServerId(player)
@@ -133,11 +133,21 @@ knockDealerDoor = function()
     local min = Config.Dealers[currentDealer]["time"]["min"]
     local max = Config.Dealers[currentDealer]["time"]["max"]
 
-    if hours >= min and hours <= max then
+    if min > max then 
+        if hours > min or hours < max then
+            knockDoorAnim(true)
+            return
+        else
+            knockDoorAnim(false)
+            return
+        end
+    elseif hours >= min and hours <= max then
         knockDoorAnim(true)
+        return
     else
         knockDoorAnim(false)
-    end
+        return
+    end         
 end
 
 function buyDealerStuff()
@@ -175,7 +185,7 @@ function knockDoorAnim(home)
         knockingDoor = false
         Citizen.Wait(1000)
         dealerIsHome = true
-        if Config.Dealers[currentDealer]["name"] == "Mystery man" then
+        if Config.Dealers[currentDealer]["name"] == "RickRoss" then
             TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "normal", 'Hello my child, what can I do for you')
         elseif Config.Dealers[currentDealer]["name"] == "Fred" then
             dealerIsHome = false

@@ -1,20 +1,15 @@
-cornerselling = false
-hasTarget = false
-busySelling = false
-CurrentCops = 0
-PlayerJob = {}
-onDuty = false
-
-startLocation = nil
-
-currentPed = nil
-
-lastPed = {}
-
-stealingPed = nil
-stealData = {}
-
-availableDrugs = {}
+local cornerselling = false
+local hasTarget = false
+local busySelling = false
+local CurrentCops = 0
+local PlayerJob = {}
+local onDuty = false
+local startLocation = nil
+local currentPed = nil
+local lastPed = {}
+local stealingPed = nil
+local stealData = {}
+local availableDrugs = {}
 
 local policeMessage = {
     "Suspicious situation",
@@ -145,7 +140,7 @@ Citizen.CreateThread(function()
                 
                 local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
 
-                if closestDistance < 15.0 and closestPed ~= 0 then
+                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) then
                     SellToPed(closestPed)
                 end
             end

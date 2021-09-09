@@ -173,53 +173,29 @@ Config.DrugsPrice = {
 Config.DeliveryLocations = {
     [1] = {
         ["label"] = "Stripclub",
-        ["coords"] = {
-            ["x"] = 106.24,
-            ["y"] = -1280.32,
-            ["z"] = 29.24,
-        }
+        ["coords"] = vector3(106.24, -1280.32, 29.24),
     },
     [2] = {
         ["label"] = "Vinewood Video",
-        ["coords"] = {
-            ["x"] = 223.98,
-            ["y"] = 121.53,
-            ["z"] = 102.76,
-        }
+	["coords"] = vector3(223.98, 121.53, 102.76),
     },
     [3] = {
-        ["label"] = "Vinewood Video",
-        ["coords"] = {
-            ["x"] = 223.98,
-            ["y"] = 121.53,
-            ["z"] = 102.76,
-        }
+        ["label"] = "Taxi",
+	["coords"] = vector3(882.67, -160.26, 77.11),
     },
     [4] = {
         ["label"] = "Resort",
-        ["coords"] = {
-            ["x"] = -1245.63,
-            ["y"] = 376.21,
-            ["z"] = 75.34,
-        }
+	["coords"] = vector3(-1245.63, 376.21, 75.34),
     },
     [5] = {
         ["label"] = "Bahama Mamas",
-        ["coords"] = {
-            ["x"] = -1383.1,
-            ["y"] = -639.99,
-            ["z"] = 28.67,
-        }
+	["coords"] = vector3(-1383.1, -639.99, 28.67),
     },
 }
 
 Config.CornerSellingZones = {
     [1] = {
-        ["coords"] = {
-            ["x"] = -1415.53,
-            ["y"] = -1041.51,
-            ["z"] = 4.62,
-        },
+	["coords"] = vector3(-1415.53, -1041.51, 4.62),
         ["time"] = {
             ["min"] = 12,
             ["max"] = 18,

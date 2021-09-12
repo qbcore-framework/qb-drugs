@@ -152,9 +152,9 @@ QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {
     {name = "name", help = "Name of the dealer"},
 }, true, function(source, args)
     local dealerName = args[1]
-    local result = exports.ghmattimysql:executeSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = dealerName})
+    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = dealerName})
     if result[1] ~= nil then
-        exports.ghmattimysql:execute('DELETE FROM dealers WHERE name=@name', {['@name'] = dealerName})
+        exports.oxmysql:execute('DELETE FROM dealers WHERE name=@name', {['@name'] = dealerName})
         Config.Dealers[dealerName] = nil
         TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
         TriggerClientEvent('QBCore:Notify', source, "Dealer: "..dealerName.." Has Been Deleted", "success")
@@ -190,7 +190,7 @@ end, "admin")
 
 Citizen.CreateThread(function()
     Wait(500)
-    local dealers = exports.ghmattimysql:executeSync('SELECT * FROM dealers')
+    local dealers = exports.oxmysql:fetchSync('SELECT * FROM dealers', {})
     if dealers[1] ~= nil then
         for k, v in pairs(dealers) do
             local coords = json.decode(v.coords)
@@ -218,11 +218,11 @@ RegisterServerEvent('qb-drugs:server:CreateDealer')
 AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local result = exports.ghmattimysql:executeSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = DealerData.name})
+    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = DealerData.name})
     if result[1] ~= nil then
         TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
     else
-        exports.ghmattimysql:execute('INSERT INTO dealers (name, coords, time, createdby) VALUES (@name, @coords, @time, @createdby)', {
+        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (@name, @coords, @time, @createdby)', {
             ['@name'] = DealerData.name,
             ['@coords'] = json.encode(DealerData.pos),
             ['@time'] = json.encode(DealerData.time),

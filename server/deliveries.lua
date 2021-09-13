@@ -239,7 +239,7 @@ AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     if result[1] ~= nil then
         TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
     else
-        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?)', {DealerData.name,
+        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?, ?, ?, ?)', {DealerData.name,
                                                                                                   json.encode(
             DealerData.pos), json.encode(DealerData.time), Player.PlayerData.citizenid}, function()
             Config.Dealers[DealerData.name] = {

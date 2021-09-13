@@ -1,15 +1,10 @@
-currentDealer = nil
-knockingDoor = false
-
+local currentDealer = nil
+local knockingDoor = false
 local dealerIsHome = false
-
 local waitingDelivery = nil
 local activeDelivery = nil
-
 local interacting = false
-
 local deliveryTimeout = 0
-
 local isHealingPerson = false
 local healAnimDict = "mini@cpr@char_a@cpr_str"
 local healAnim = "cpr_pumpchest"

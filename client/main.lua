@@ -1,4 +1,4 @@
-CurrentCops = 0
+local CurrentCops = 0
 
 RegisterNetEvent('police:SetCopCount')
 AddEventHandler('police:SetCopCount', function(amount)

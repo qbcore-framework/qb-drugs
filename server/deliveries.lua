@@ -3,7 +3,8 @@ AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, 
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Config.Dealers[dealer]["products"][itemData.slot].amount - 1 >= 0 then
-        Config.Dealers[dealer]["products"][itemData.slot].amount = Config.Dealers[dealer]["products"][itemData.slot].amount - amount
+        Config.Dealers[dealer]["products"][itemData.slot].amount =
+            Config.Dealers[dealer]["products"][itemData.slot].amount - amount
         TriggerClientEvent('qb-drugs:client:setDealerItems', -1, itemData, amount, dealer)
     else
         Player.Functions.RemoveItem(itemData.name, amount)
@@ -33,7 +34,8 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
     local curRep = Player.PlayerData.metadata["dealerrep"]
 
     if inTime then
-        if Player.Functions.GetItemByName('weed_brick') ~= nil and Player.Functions.GetItemByName('weed_brick').amount >= deliveryData["amount"] then
+        if Player.Functions.GetItemByName('weed_brick') ~= nil and Player.Functions.GetItemByName('weed_brick').amount >=
+            deliveryData["amount"] then
             Player.Functions.RemoveItem('weed_brick', deliveryData["amount"])
             local cops = GetCurrentCops()
             local price = 3000
@@ -69,7 +71,8 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
 
             if Player.Functions.GetItemByName('weed_brick').amount ~= nil then
                 Player.Functions.RemoveItem('weed_brick', Player.Functions.GetItemByName('weed_brick').amount)
-                Player.Functions.AddMoney('cash', (Player.Functions.GetItemByName('weed_brick').amount * 6000 / 100 * 5))
+                Player.Functions
+                    .AddMoney('cash', (Player.Functions.GetItemByName('weed_brick').amount * 6000 / 100 * 5))
             end
 
             TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["weed_brick"], "remove")
@@ -106,28 +109,32 @@ end)
 
 RegisterServerEvent('qb-drugs:server:callCops')
 AddEventHandler('qb-drugs:server:callCops', function(streetLabel, coords)
-    local msg = "A suspicious situation has been located at "..streetLabel..", possibly drug dealing."
+    local msg = "A suspicious situation has been located at " .. streetLabel .. ", possibly drug dealing."
     local alertData = {
         title = "Drug Dealing",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
+        coords = {
+            x = coords.x,
+            y = coords.y,
+            z = coords.z
+        },
         description = msg
     }
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 TriggerClientEvent("qb-drugs:client:robberyCall", Player.PlayerData.source, msg, streetLabel, coords)
                 TriggerClientEvent("qb-phone:client:addPoliceAlert", Player.PlayerData.source, alertData)
             end
         end
-	end
+    end
 end)
 
 function GetCurrentCops()
     local amount = 0
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 amount = amount + 1
             end
@@ -136,11 +143,16 @@ function GetCurrentCops()
     return amount
 end
 
-QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {
-    {name = "name", help = "Dealer name"},
-    {name = "min", help = "Minimum time"},
-    {name = "max", help = "Maximum time"},
-}, true, function(source, args)
+QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {{
+    name = "name",
+    help = "Dealer name"
+}, {
+    name = "min",
+    help = "Minimum time"
+}, {
+    name = "max",
+    help = "Maximum time"
+}}, true, function(source, args)
     local dealerName = args[1]
     local mintime = tonumber(args[2])
     local maxtime = tonumber(args[3])
@@ -148,18 +160,19 @@ QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {
     TriggerClientEvent('qb-drugs:client:CreateDealer', source, dealerName, mintime, maxtime)
 end, "admin")
 
-QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {
-    {name = "name", help = "Name of the dealer"},
-}, true, function(source, args)
+QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {{
+    name = "name",
+    help = "Name of the dealer"
+}}, true, function(source, args)
     local dealerName = args[1]
-    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = dealerName})
+    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name = ?', {dealerName})
     if result[1] ~= nil then
-        exports.oxmysql:execute('DELETE FROM dealers WHERE name=@name', {['@name'] = dealerName})
+        exports.oxmysql:execute('DELETE FROM dealers WHERE name = ?', {dealerName})
         Config.Dealers[dealerName] = nil
         TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
-        TriggerClientEvent('QBCore:Notify', source, "Dealer: "..dealerName.." Has Been Deleted", "success")
+        TriggerClientEvent('QBCore:Notify', source, "Dealer: " .. dealerName .. " Has Been Deleted", "success")
     else
-        TriggerClientEvent('QBCore:Notify', source, "Dealer: "..dealerName.." Doesn\'t Exist", "error")
+        TriggerClientEvent('QBCore:Notify', source, "Dealer: " .. dealerName .. " Doesn\'t Exist", "error")
     end
 end, "admin")
 
@@ -170,7 +183,8 @@ QBCore.Commands.Add("dealers", "View All Dealers (Admin Only)", {}, false, funct
             DealersText = DealersText .. "Name: " .. v["name"] .. "<br>"
         end
         TriggerClientEvent('chat:addMessage', source, {
-            template = '<div class="chat-message advert"><div class="chat-message-body"><strong>List of all dealers: </strong><br><br> '..DealersText..'</div></div>',
+            template = '<div class="chat-message advert"><div class="chat-message-body"><strong>List of all dealers: </strong><br><br> ' ..
+                DealersText .. '</div></div>',
             args = {}
         })
     else
@@ -178,7 +192,10 @@ QBCore.Commands.Add("dealers", "View All Dealers (Admin Only)", {}, false, funct
     end
 end, "admin")
 
-QBCore.Commands.Add("dealergoto", "Teleport To A Dealer (Admin Only)", {{name = "name", help = "Dealer name"}}, true, function(source, args)
+QBCore.Commands.Add("dealergoto", "Teleport To A Dealer (Admin Only)", {{
+    name = "name",
+    help = "Dealer name"
+}}, true, function(source, args)
     local DealerName = tostring(args[1])
 
     if Config.Dealers[DealerName] ~= nil then
@@ -201,13 +218,13 @@ Citizen.CreateThread(function()
                 ["coords"] = {
                     ["x"] = coords.x,
                     ["y"] = coords.y,
-                    ["z"] = coords.z,
+                    ["z"] = coords.z
                 },
                 ["time"] = {
                     ["min"] = time.min,
-                    ["max"] = time.max,
+                    ["max"] = time.max
                 },
-                ["products"] = Config.Products,
+                ["products"] = Config.Products
             }
         end
     end
@@ -218,28 +235,25 @@ RegisterServerEvent('qb-drugs:server:CreateDealer')
 AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name=@name', {['@name'] = DealerData.name})
+    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name = ?', {DealerData.name})
     if result[1] ~= nil then
         TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
     else
-        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (@name, @coords, @time, @createdby)', {
-            ['@name'] = DealerData.name,
-            ['@coords'] = json.encode(DealerData.pos),
-            ['@time'] = json.encode(DealerData.time),
-            ['@createdby'] = Player.PlayerData.citizenid
-        }, function()
+        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?)', {DealerData.name,
+                                                                                                  json.encode(
+            DealerData.pos), json.encode(DealerData.time), Player.PlayerData.citizenid}, function()
             Config.Dealers[DealerData.name] = {
                 ["name"] = DealerData.name,
                 ["coords"] = {
                     ["x"] = DealerData.pos.x,
                     ["y"] = DealerData.pos.y,
-                    ["z"] = DealerData.pos.z,
+                    ["z"] = DealerData.pos.z
                 },
                 ["time"] = {
                     ["min"] = DealerData.time.min,
-                    ["max"] = DealerData.time.max,
+                    ["max"] = DealerData.time.max
                 },
-                ["products"] = Config.Products,
+                ["products"] = Config.Products
             }
 
             TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)

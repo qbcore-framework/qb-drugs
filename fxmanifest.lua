@@ -23,3 +23,5 @@ server_scripts {
 server_exports {
     'GetDealers'
 }
+
+lua54 'yes'

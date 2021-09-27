@@ -16,24 +16,20 @@ local policeMessage = {
     "Possible drug dealing",
 }
 
-RegisterNetEvent('qb-drugs:client:cornerselling')
-AddEventHandler('qb-drugs:client:cornerselling', function(data)
+RegisterNetEvent('qb-drugs:client:cornerselling', function(data)
     QBCore.Functions.TriggerCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(result)
         if CurrentCops >= Config.MinimumDrugSalePolice then
             if result ~= nil then
                 availableDrugs = result
-
                 if not cornerselling then
                     cornerselling = true
                     LocalPlayer.state:set("inv_busy", true, true)
                     QBCore.Functions.Notify('You started selling drugs')
                     startLocation = GetEntityCoords(PlayerPedId())
-                    -- TaskStartScenarioInPlace(PlayerPedId(), "CODE_HUMAN_CROSS_ROAD_WAIT", 0, false)
                 else
                     cornerselling = false
                     LocalPlayer.state:set("inv_busy", false, true)
                     QBCore.Functions.Notify('You stopped selling drugs')
-                    -- ClearPedTasks(PlayerPedId())
                 end
             else
                 QBCore.Functions.Notify('You aren\'t carrying any drugs with you..', 'error')
@@ -45,123 +41,25 @@ AddEventHandler('qb-drugs:client:cornerselling', function(data)
     end)
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
-AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerJob = QBCore.Functions.GetPlayerData().job
     onDuty = true
 end)
 
-RegisterNetEvent('QBCore:Client:SetDuty')
-AddEventHandler('QBCore:Client:SetDuty', function(duty)
+RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
     onDuty = duty
 end)
 
-RegisterNetEvent('QBCore:Client:OnJobUpdate')
-AddEventHandler('QBCore:Client:OnJobUpdate', function(JobInfo)
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerJob = JobInfo
     onDuty = true
 end)
 
-RegisterNetEvent('police:SetCopCount')
-AddEventHandler('police:SetCopCount', function(amount)
+RegisterNetEvent('police:SetCopCount', function(amount)
     CurrentCops = amount
 end)
 
-function toFarAway()
-    QBCore.Functions.Notify('Moved Too Far!', 'error')
-    LocalPlayer.state:set("inv_busy", false, true)
-    cornerselling = false
-    hasTarget = false
-    busySelling = false
-    startLocation = nil
-    currentPed = nil
-    availableDrugs = {}
-    Citizen.Wait(5000)
-end
-
-function callPolice(coords)
-    local title = policeMessage[math.random(1, #policeMessage)]
-    local pCoords = GetEntityCoords(PlayerPedId())
-    local s1, s2 = Citizen.InvokeNative(0x2EB41072B4C1E4C0, pCoords.x, pCoords.y, pCoords.z, Citizen.PointerValueInt(), Citizen.PointerValueInt())
-    local street1 = GetStreetNameFromHashKey(s1)
-    local street2 = GetStreetNameFromHashKey(s2)
-    local streetLabel = street1
-    if street2 ~= nil then streetLabel = street1..' '..street2 end
-
-    TriggerServerEvent('police:server:PoliceAlertMessage', title, streetLabel, coords)
-    hasTarget = false
-    Citizen.Wait(5000)
-end
-
-Citizen.CreateThread(function()
-    while true do 
-        Citizen.Wait(4)
-        if stealingPed ~= nil and stealData ~= nil then
-            if IsEntityDead(stealingPed) then
-                local ped = PlayerPedId()
-                local pos = GetEntityCoords(ped)
-                local pedpos = GetEntityCoords(stealingPed)
-                if #(pos - pedpos) < 1.5 then
-                    DrawText3D(pedpos.x, pedpos.y, pedpos.z, "[E] Pick up")
-                    if IsControlJustReleased(0, 38) then
-                        RequestAnimDict("pickup_object")
-                        while not HasAnimDictLoaded("pickup_object") do
-                            Citizen.Wait(7)
-                        end
-                        TaskPlayAnim(ped, "pickup_object" ,"pickup_low" ,8.0, -8.0, -1, 1, 0, false, false, false )
-                        Citizen.Wait(2000)
-                        ClearPedTasks(ped)
-                        TriggerServerEvent("QBCore:Server:AddItem", stealData.item, stealData.amount)
-                        TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
-                        stealingPed = nil
-                        stealData = {}
-                    end
-                end
-            end
-        else
-            Citizen.Wait(1000)
-        end
-    end
-end)
-
-Citizen.CreateThread(function()
-    while true do
-        if cornerselling then
-            local player = PlayerPedId()
-            local coords = GetEntityCoords(player)
-            if not hasTarget then
-                local PlayerPeds = {}
-                if next(PlayerPeds) == nil then
-                    for _, player in ipairs(GetActivePlayers()) do
-                        local ped = GetPlayerPed(player)
-                        table.insert(PlayerPeds, ped)
-                    end
-                end
-                
-                local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
-
-                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) then
-                    SellToPed(closestPed)
-                end
-            end
-
-            local startDist = #(startLocation - coords)
-
-            if startDist > 10 then
-                toFarAway()
-            end
-        end
-
-        if not cornerselling then
-            Citizen.Wait(1000)
-        end
-
-        Citizen.Wait(3)
-    end
-end)
-
-RegisterNetEvent('qb-drugs:client:refreshAvailableDrugs')
-AddEventHandler('qb-drugs:client:refreshAvailableDrugs', function(items)
+RegisterNetEvent('qb-drugs:client:refreshAvailableDrugs', function(items)
     availableDrugs = items
     if #availableDrugs <= 0 then
         QBCore.Functions.Notify('No more drugs left to sell!', 'error')
@@ -170,7 +68,55 @@ AddEventHandler('qb-drugs:client:refreshAvailableDrugs', function(items)
     end
 end)
 
-function SellToPed(ped)
+local function DrawText3D(x, y, z, text)
+    SetTextScale(0.35, 0.35)
+    SetTextFont(4)
+    SetTextProportional(1)
+    SetTextColour(255, 255, 255, 215)
+    SetTextEntry("STRING")
+    SetTextCentre(true)
+    AddTextComponentString(text)
+    SetDrawOrigin(x,y,z, 0)
+    DrawText(0.0, 0.0)
+    local factor = (string.len(text)) / 370
+    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
+    ClearDrawOrigin()
+end
+
+local function loadAnimDict(dict)
+    RequestAnimDict(dict)
+
+    while not HasAnimDictLoaded(dict) do
+        Wait(0)
+    end
+end
+
+local function toFarAway()
+    QBCore.Functions.Notify('Moved Too Far!', 'error')
+    LocalPlayer.state:set("inv_busy", false, true)
+    cornerselling = false
+    hasTarget = false
+    busySelling = false
+    startLocation = nil
+    currentPed = nil
+    availableDrugs = {}
+    Wait(5000)
+end
+
+local function callPolice(coords)
+    local title = policeMessage[math.random(1, #policeMessage)]
+    local pCoords = GetEntityCoords(PlayerPedId())
+    local s1, s2 = GetStreetNameAtCoord(pCoords.x, pCoords.y, pCoords.z)
+    local street1 = GetStreetNameFromHashKey(s1)
+    local street2 = GetStreetNameFromHashKey(s2)
+    local streetLabel = street1
+    if street2 ~= nil then streetLabel = street1..' '..street2 end
+    TriggerServerEvent('police:server:PoliceAlertMessage', title, streetLabel, coords)
+    hasTarget = false
+    Wait(5000)
+end
+
+local function SellToPed(ped)
     hasTarget = true
     for i = 1, #lastPed, 1 do
         if lastPed[i] == ped then
@@ -231,7 +177,7 @@ function SellToPed(ped)
         TaskGoStraightToCoord(ped, coords, 1.2, -1, 0.0, 0.0)
         pedDist = #(coords - pedCoords)
 
-        Citizen.Wait(100)
+        Wait(100)
     end
 
     TaskLookAtEntity(ped, PlayerPedId(), 5500.0, 2048, 3)
@@ -244,7 +190,6 @@ function SellToPed(ped)
             coords = GetEntityCoords(PlayerPedId(), true)
             pedCoords = GetEntityCoords(ped)
             pedDist = #(coords - pedCoords)
-
             if getRobbed == 18 or getRobbed == 9 then
                 TriggerServerEvent('qb-drugs:server:robCornerDrugs', availableDrugs[drugType].item, bagAmount)
                 QBCore.Functions.Notify('You have been robbed and lost '..bagAmount..' bags(\'s) '..availableDrugs[drugType].label, 'error')
@@ -253,42 +198,37 @@ function SellToPed(ped)
                     item = availableDrugs[drugType].item,
                     amount = bagAmount,
                 }
-
                 hasTarget = false
-
                 local rand = (math.random(6,9) / 100) + 0.3
                 local rand2 = (math.random(6,9) / 100) + 0.3
                 if math.random(10) > 5 then
                     rand = 0.0 - rand
                 end
-            
                 if math.random(10) > 5 then
                     rand2 = 0.0 - rand2
                 end
-            
                 local moveto = GetEntityCoords(PlayerPedId())
                 local movetoCoords = {x = moveto.x + math.random(100, 500), y = moveto.y + math.random(100, 500), z = moveto.z, }
                 ClearPedTasksImmediately(ped)
                 TaskGoStraightToCoord(ped, movetoCoords.x, movetoCoords.y, movetoCoords.z, 15.0, -1, 0.0, 0.0)
-
-                table.insert(lastPed, ped)
+                lastPed[#lastPed+1] = ped
                 break
             else
                 if pedDist < 1.5 and cornerselling then
-                    QBCore.Functions.DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for $'..randomPrice..'? / ~g~G~w~ Decline offer')
+                    DrawText3D(pedCoords.x, pedCoords.y, pedCoords.z, '~g~E~w~ '..bagAmount..'x '..currentOfferDrug.label..' for $'..randomPrice..'? / ~g~G~w~ Decline offer')
                     if IsControlJustPressed(0, 38) then
                         TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
                         hasTarget = false
 
                         loadAnimDict("gestures@f@standing@casual")
                         TaskPlayAnim(PlayerPedId(), "gestures@f@standing@casual", "gesture_point", 3.0, 3.0, -1, 49, 0, 0, 0, 0)
-                        Citizen.Wait(650)
+                        Wait(650)
                         ClearPedTasks(PlayerPedId())
 
                         SetPedKeepTask(ped, false)
                         SetEntityAsNoLongerNeeded(ped)
                         ClearPedTasksImmediately(ped)
-                        table.insert(lastPed, ped)
+                        lastPed[#lastPed+1] = ped
                         break
                     end
 
@@ -299,7 +239,7 @@ function SellToPed(ped)
                         SetPedKeepTask(ped, false)
                         SetEntityAsNoLongerNeeded(ped)
                         ClearPedTasksImmediately(ped)
-                        table.insert(lastPed, ped)
+                        lastPed[#lastPed+1] = ped
                         break
                     end
                 else
@@ -308,33 +248,73 @@ function SellToPed(ped)
                     SetPedKeepTask(ped, false)
                     SetEntityAsNoLongerNeeded(ped)
                     ClearPedTasksImmediately(ped)
-                    table.insert(lastPed, ped)
+                    lastPed[#lastPed+1] = ped
                     cornerselling = false
                     currentPed = nil
                 end
             end
-            
-            Citizen.Wait(3)
+            Wait(3)
         end
-        
-        Citizen.Wait(math.random(4000, 7000))
+        Wait(math.random(4000, 7000))
     end
 end
 
-function loadAnimDict(dict)
-    RequestAnimDict(dict)
+CreateThread(function()
+    while true do
+        sleep = 1000
+        if stealingPed ~= nil and stealData ~= nil then
+            sleep = 0
+            if IsEntityDead(stealingPed) then
+                local ped = PlayerPedId()
+                local pos = GetEntityCoords(ped)
+                local pedpos = GetEntityCoords(stealingPed)
+                if #(pos - pedpos) < 1.5 then
+                    DrawText3D(pedpos.x, pedpos.y, pedpos.z, "[E] Pick up")
+                    if IsControlJustReleased(0, 38) then
+                        RequestAnimDict("pickup_object")
+                        while not HasAnimDictLoaded("pickup_object") do
+                            Wait(7)
+                        end
+                        TaskPlayAnim(ped, "pickup_object" ,"pickup_low" ,8.0, -8.0, -1, 1, 0, false, false, false )
+                        Wait(2000)
+                        ClearPedTasks(ped)
+                        TriggerServerEvent("QBCore:Server:AddItem", stealData.item, stealData.amount)
+                        TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
+                        stealingPed = nil
+                        stealData = {}
+                    end
+                end
+            end
+        end
+        Wait(sleep)
+    end
+end)
 
-    while not HasAnimDictLoaded(dict) do
-        Citizen.Wait(0)
+CreateThread(function()
+    while true do
+        sleep = 1000
+        if cornerselling then
+            sleep = 0
+            local player = PlayerPedId()
+            local coords = GetEntityCoords(player)
+            if not hasTarget then
+                local PlayerPeds = {}
+                if next(PlayerPeds) == nil then
+                    for _, player in ipairs(GetActivePlayers()) do
+                        local ped = GetPlayerPed(player)
+                        PlayerPeds[#PlayerPeds+1] = ped
+                    end
+                end
+                local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
+                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) then
+                    SellToPed(closestPed)
+                end
+            end
+            local startDist = #(startLocation - coords)
+            if startDist > 10 then
+                toFarAway()
+            end
+        end
+        Wait(sleep)
     end
-end
-
-function runAnimation(target)
-    RequestAnimDict("mp_character_creation@lineup@male_a")
-    while not HasAnimDictLoaded("mp_character_creation@lineup@male_a") do
-    Citizen.Wait(0)
-    end
-    if not IsEntityPlayingAnim(target, "mp_character_creation@lineup@male_a", "loop_raised", 3) then
-        TaskPlayAnim(target, "mp_character_creation@lineup@male_a", "loop_raised", 8.0, -8, -1, 49, 0, 0, 0, 0)
-    end
-end
+end)

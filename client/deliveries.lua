@@ -137,7 +137,7 @@ function GetClosestPlayer()
 	return closestPlayer, closestDistance
 end
 
-knockDealerDoor = function()
+function knockDealerDoor()
     local hours = GetClockHours()
     local min = Config.Dealers[currentDealer]["time"]["min"]
     local max = Config.Dealers[currentDealer]["time"]["max"]

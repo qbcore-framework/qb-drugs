@@ -384,7 +384,7 @@ end
 function doPoliceAlert()
     local ped = PlayerPedId()
     local pos = GetEntityCoords(ped)
-    local s1, s2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z, Citizen.PointerValueInt(), Citizen.PointerValueInt())
+    local s1, s2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z)
     local street1 = GetStreetNameFromHashKey(s1)
     local street2 = GetStreetNameFromHashKey(s2)
     local streetLabel = street1

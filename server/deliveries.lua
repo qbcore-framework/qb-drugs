@@ -165,7 +165,7 @@ QBCore.Commands.Add("deletedealer", "Delete A Dealer (Admin Only)", {{
     help = "Name of the dealer"
 }}, true, function(source, args)
     local dealerName = args[1]
-    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name = ?', {dealerName})
+    local result = exports.oxmysql:executeSync('SELECT * FROM dealers WHERE name = ?', {dealerName})
     if result[1] ~= nil then
         exports.oxmysql:execute('DELETE FROM dealers WHERE name = ?', {dealerName})
         Config.Dealers[dealerName] = nil
@@ -207,7 +207,7 @@ end, "admin")
 
 Citizen.CreateThread(function()
     Wait(500)
-    local dealers = exports.oxmysql:fetchSync('SELECT * FROM dealers', {})
+    local dealers = exports.oxmysql:executeSync('SELECT * FROM dealers', {})
     if dealers[1] ~= nil then
         for k, v in pairs(dealers) do
             local coords = json.decode(v.coords)
@@ -235,7 +235,7 @@ RegisterServerEvent('qb-drugs:server:CreateDealer')
 AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local result = exports.oxmysql:fetchSync('SELECT * FROM dealers WHERE name = ?', {DealerData.name})
+    local result = exports.oxmysql:executeSync('SELECT * FROM dealers WHERE name = ?', {DealerData.name})
     if result[1] ~= nil then
         TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
     else

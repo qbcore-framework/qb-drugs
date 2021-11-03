@@ -7,11 +7,11 @@ QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs
         local item = Player.Functions.GetItemByName(Config.CornerSellingDrugsList[i])
 
         if item ~= nil then
-            table.insert(AvailableDrugs, {
+            AvailableDrugs[#AvailableDrugs+1] = {
                 item = item.name,
                 amount = item.amount,
                 label = QBCore.Shared.Items[item.name]["label"]
-            })
+            }
         end
     end
 
@@ -29,7 +29,7 @@ AddEventHandler('qb-drugs:server:sellCornerDrugs', function(item, amount, price)
     local hasItem = Player.Functions.GetItemByName(item)
     local AvailableDrugs = {}
     if hasItem.amount >= amount then
-        
+
         TriggerClientEvent('QBCore:Notify', src, 'Offer accepted!', 'success')
         Player.Functions.RemoveItem(item, amount)
         Player.Functions.AddMoney('cash', price, "sold-cornerdrugs")
@@ -39,11 +39,11 @@ AddEventHandler('qb-drugs:server:sellCornerDrugs', function(item, amount, price)
             local item = Player.Functions.GetItemByName(Config.CornerSellingDrugsList[i])
 
             if item ~= nil then
-                table.insert(AvailableDrugs, {
+                AvailableDrugs[#AvailableDrugs+1] = {
                     item = item.name,
                     amount = item.amount,
                     label = QBCore.Shared.Items[item.name]["label"]
-                })
+                }
             end
         end
 
@@ -67,11 +67,11 @@ AddEventHandler('qb-drugs:server:robCornerDrugs', function(item, amount, price)
         local item = Player.Functions.GetItemByName(Config.CornerSellingDrugsList[i])
 
         if item ~= nil then
-            table.insert(AvailableDrugs, {
+            AvailableDrugs[#AvailableDrugs+1] = {
                 item = item.name,
                 amount = item.amount,
                 label = QBCore.Shared.Items[item.name]["label"]
-            })
+            }
         end
     end
 

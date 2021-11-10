@@ -1,5 +1,6 @@
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local currentDealer = nil
-local knockingDoor = false
 local dealerIsHome = false
 local waitingDelivery = nil
 local activeDelivery = nil
@@ -30,7 +31,7 @@ local function DrawText3D(x, y, z, text)
     ClearDrawOrigin()
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
@@ -109,10 +110,10 @@ Citizen.CreateThread(function()
 
         if not nearDealer then
             dealerIsHome = false
-            Citizen.Wait(2000)
+            Wait(2000)
         end
 
-        Citizen.Wait(3)
+        Wait(3)
     end
 end)
 
@@ -172,17 +173,15 @@ function knockDoorAnim(home)
 
     if home then
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "knock_door", 0.2)
-        Citizen.Wait(100)
+        Wait(100)
         while (not HasAnimDictLoaded(knockAnimLib)) do
             RequestAnimDict(knockAnimLib)
-            Citizen.Wait(100)
+            Wait(100)
         end
-        knockingDoor = true
         TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false )
-        Citizen.Wait(3500)
+        Wait(3500)
         TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
-        knockingDoor = false
-        Citizen.Wait(1000)
+        Wait(1000)
         dealerIsHome = true
         if Config.Dealers[currentDealer]["name"] == "Mystery man" then
             TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "normal", 'Hello my child, what can I do for you')
@@ -195,17 +194,15 @@ function knockDoorAnim(home)
         -- knockTimeout()
     else
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "knock_door", 0.2)
-        Citizen.Wait(100)
+        Wait(100)
         while (not HasAnimDictLoaded(knockAnimLib)) do
             RequestAnimDict(knockAnimLib)
-            Citizen.Wait(100)
+            Wait(100)
         end
-        knockingDoor = true
         TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false )
-        Citizen.Wait(3500)
+        Wait(3500)
         TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
-        knockingDoor = false
-        Citizen.Wait(1000)
+        Wait(1000)
         QBCore.Functions.Notify('It looks like no one is home..', 'error', 3500)
     end
 end
@@ -286,7 +283,7 @@ AddEventHandler('qb-drugs:client:setLocation', function(locationData)
 
     setMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
 
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while true do
 
             local ped = PlayerPedId()
@@ -311,19 +308,19 @@ AddEventHandler('qb-drugs:client:setLocation', function(locationData)
                 end
 
                 if not inDeliveryRange then
-                    Citizen.Wait(1500)
+                    Wait(1500)
                 end
             else
                 break
             end
 
-            Citizen.Wait(3)
+            Wait(3)
         end
     end)
 end)
 
 function deliveryTimer()
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while true do
 
             if deliveryTimeout - 1 > 0 then
@@ -333,7 +330,7 @@ function deliveryTimer()
                 break
             end
 
-            Citizen.Wait(1000)
+            Wait(1000)
         end
     end)
 end
@@ -341,7 +338,7 @@ end
 function deliverStuff(activeDelivery)
     if deliveryTimeout > 0 then
         TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-        Citizen.Wait(500)
+        Wait(500)
         TriggerEvent('animations:client:EmoteCommandStart', {"bumbin"})
         checkPedDistance()
         QBCore.Functions.Progressbar("work_dropbox", "Delivering products..", 3500, false, true, {
@@ -369,7 +366,7 @@ function checkPedDistance()
             PlayerPeds[#PlayerPeds+1] = ped
         end
     end
-
+	local coords = GetEntityCoords(player)
     local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
 
     if closestDistance < 40 and closestPed ~= 0 then

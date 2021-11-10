@@ -1,3 +1,5 @@
+QBCore = exports['qb-core']:GetCoreObject()
+
 RegisterServerEvent('qb-drugs:server:updateDealerItems')
 AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
     local src = source

@@ -1,3 +1,4 @@
+QBCore = exports['qb-core']:GetCoreObject()
 local CurrentCops = 0
 
 RegisterNetEvent('police:SetCopCount')

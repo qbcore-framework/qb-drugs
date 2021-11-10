@@ -1,3 +1,4 @@
+local QBCore = exports['qb-core']:GetCoreObject()
 QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(source, cb)
     local AvailableDrugs = {}
     local src = source

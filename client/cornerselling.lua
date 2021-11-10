@@ -1,11 +1,9 @@
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local cornerselling = false
 local hasTarget = false
-local busySelling = false
-local CurrentCops = 0
-local PlayerJob = {}
-local onDuty = false
+CurrentCops = 0
 local startLocation = nil
-local currentPed = nil
 local lastPed = {}
 local stealingPed = nil
 local stealData = {}
@@ -39,20 +37,6 @@ RegisterNetEvent('qb-drugs:client:cornerselling', function(data)
             QBCore.Functions.Notify("There Are Not Enough Police On Duty (".. Config.MinimumDrugSalePolice .." Required)", "error")
         end
     end)
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerJob = QBCore.Functions.GetPlayerData().job
-    onDuty = true
-end)
-
-RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
-    onDuty = duty
-end)
-
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerJob = JobInfo
-    onDuty = true
 end)
 
 RegisterNetEvent('police:SetCopCount', function(amount)
@@ -96,9 +80,7 @@ local function toFarAway()
     LocalPlayer.state:set("inv_busy", false, true)
     cornerselling = false
     hasTarget = false
-    busySelling = false
     startLocation = nil
-    currentPed = nil
     availableDrugs = {}
     Wait(5000)
 end
@@ -168,7 +150,7 @@ local function SellToPed(ped)
 
     while pedDist > 1.5 do
         coords = GetEntityCoords(PlayerPedId(), true)
-        pedCoords = GetEntityCoords(ped)    
+        pedCoords = GetEntityCoords(ped)
         if getRobbed == 18 or getRobbed == 9 then
             TaskGoStraightToCoord(ped, coords, 15.0, -1, 0.0, 0.0)
         else
@@ -183,7 +165,6 @@ local function SellToPed(ped)
     TaskLookAtEntity(ped, PlayerPedId(), 5500.0, 2048, 3)
     TaskTurnPedToFaceEntity(ped, PlayerPedId(), 5500)
     TaskStartScenarioInPlace(ped, "WORLD_HUMAN_STAND_IMPATIENT_UPRIGHT", 0, false)
-    currentPed = ped
 
     if hasTarget then
         while pedDist < 1.5 do
@@ -250,7 +231,6 @@ local function SellToPed(ped)
                     ClearPedTasksImmediately(ped)
                     lastPed[#lastPed+1] = ped
                     cornerselling = false
-                    currentPed = nil
                 end
             end
             Wait(3)

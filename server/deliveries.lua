@@ -1,4 +1,4 @@
-QBCore = exports['qb-core']:GetCoreObject()
+local QBCore = exports['qb-core']:GetCoreObject()
 
 RegisterServerEvent('qb-drugs:server:updateDealerItems')
 AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
@@ -39,13 +39,12 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
         if Player.Functions.GetItemByName('weed_brick') ~= nil and Player.Functions.GetItemByName('weed_brick').amount >=
             deliveryData["amount"] then
             Player.Functions.RemoveItem('weed_brick', deliveryData["amount"])
-            local cops = GetCurrentCops()
             local price = 3000
-            if cops == 1 then
+            if CurrentCops == 1 then
                 price = 4000
-            elseif cops == 2 then
+            elseif CurrentCops == 2 then
                 price = 5000
-            elseif cops >= 3 then
+            elseif CurrentCops >= 3 then
                 price = 6000
             end
             if curRep < 10 then
@@ -132,19 +131,6 @@ AddEventHandler('qb-drugs:server:callCops', function(streetLabel, coords)
     end
 end)
 
-function GetCurrentCops()
-    local amount = 0
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then
-            if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
-                amount = amount + 1
-            end
-        end
-    end
-    return amount
-end
-
 QBCore.Commands.Add("newdealer", "Place A Dealer (Admin Only)", {{
     name = "name",
     help = "Dealer name"
@@ -207,7 +193,7 @@ QBCore.Commands.Add("dealergoto", "Teleport To A Dealer (Admin Only)", {{
     end
 end, "admin")
 
-Citizen.CreateThread(function()
+CreateThread(function()
     Wait(500)
     local dealers = exports.oxmysql:executeSync('SELECT * FROM dealers', {})
     if dealers[1] ~= nil then

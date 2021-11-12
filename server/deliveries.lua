@@ -44,7 +44,7 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
                 price = 4000
             elseif CurrentCops == 2 then
                 price = 5000
-            elseif CurrentCops >= 3 then
+            elseif CurrentCops == 3 then
                 price = 6000
             end
             if curRep < 10 then

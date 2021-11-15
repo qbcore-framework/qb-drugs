@@ -1,7 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-RegisterServerEvent('qb-drugs:server:updateDealerItems')
-AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
+RegisterNetEvent('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Config.Dealers[dealer]["products"][itemData.slot].amount - 1 >= 0 then
@@ -16,8 +15,7 @@ AddEventHandler('qb-drugs:server:updateDealerItems', function(itemData, amount, 
     end
 end)
 
-RegisterServerEvent('qb-drugs:server:giveDeliveryItems')
-AddEventHandler('qb-drugs:server:giveDeliveryItems', function(amount)
+RegisterNetEvent('qb-drugs:server:giveDeliveryItems', function(amount)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
 
@@ -29,8 +27,7 @@ QBCore.Functions.CreateCallback('qb-drugs:server:RequestConfig', function(source
     cb(Config.Dealers)
 end)
 
-RegisterServerEvent('qb-drugs:server:succesDelivery')
-AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
+RegisterNetEvent('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local curRep = Player.PlayerData.metadata["dealerrep"]
@@ -108,8 +105,7 @@ AddEventHandler('qb-drugs:server:succesDelivery', function(deliveryData, inTime)
     end
 end)
 
-RegisterServerEvent('qb-drugs:server:callCops')
-AddEventHandler('qb-drugs:server:callCops', function(streetLabel, coords)
+RegisterNetEvent('qb-drugs:server:callCops', function(streetLabel, coords)
     local msg = "A suspicious situation has been located at " .. streetLabel .. ", possibly drug dealing."
     local alertData = {
         title = "Drug Dealing",
@@ -219,16 +215,14 @@ CreateThread(function()
     TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
 end)
 
-RegisterServerEvent('qb-drugs:server:CreateDealer')
-AddEventHandler('qb-drugs:server:CreateDealer', function(DealerData)
+RegisterNetEvent('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local result = exports.oxmysql:executeSync('SELECT * FROM dealers WHERE name = ?', {DealerData.name})
     if result[1] ~= nil then
         TriggerClientEvent('QBCore:Notify', src, "A dealer already exists with this name..", "error")
     else
-        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?, ?, ?, ?)', {DealerData.name,
-                                                                                                  json.encode(
+        exports.oxmysql:insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?, ?, ?, ?)', {DealerData.name, json.encode(
             DealerData.pos), json.encode(DealerData.time), Player.PlayerData.citizenid}, function()
             Config.Dealers[DealerData.name] = {
                 ["name"] = DealerData.name,

@@ -24,8 +24,7 @@ QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs
     end
 end)
 
-RegisterServerEvent('qb-drugs:server:sellCornerDrugs')
-AddEventHandler('qb-drugs:server:sellCornerDrugs', function(item, amount, price)
+RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(item, amount, price)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local hasItem = Player.Functions.GetItemByName(item)
@@ -55,8 +54,7 @@ AddEventHandler('qb-drugs:server:sellCornerDrugs', function(item, amount, price)
     end
 end)
 
-RegisterServerEvent('qb-drugs:server:robCornerDrugs')
-AddEventHandler('qb-drugs:server:robCornerDrugs', function(item, amount, price)
+RegisterNetEvent('qb-drugs:server:robCornerDrugs', function(item, amount, price)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local AvailableDrugs = {}

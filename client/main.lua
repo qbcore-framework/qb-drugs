@@ -1,9 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
--- Code
-
-RegisterNetEvent('qb-drugs:AddWeapons')
-AddEventHandler('qb-drugs:AddWeapons', function()
+RegisterNetEvent('qb-drugs:AddWeapons', function()
     Config.Dealers[2]["products"][#Config.Dealers[2]["products"]+1] = {
         name = "weapon_snspistol",
         price = 5000,

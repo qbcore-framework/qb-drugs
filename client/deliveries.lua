@@ -1,5 +1,3 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-
 local currentDealer = nil
 local dealerIsHome = false
 local waitingDelivery = nil
@@ -47,7 +45,7 @@ CreateThread(function()
                 if dealerDist <= 1.5 and not isHealingPerson then
                     if not interacting then
                         if not dealerIsHome then
-                            DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To knock')
+                            DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], Lang:t("info.knock_button"))
 
                             if IsControlJustPressed(0, 38) then
                                 currentDealer = id
@@ -55,9 +53,9 @@ CreateThread(function()
                             end
                         elseif dealerIsHome then
                             if dealer["name"] == "Mystery man" then
-                                DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Help your guy ($5000)')
+                                DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], Lang:t("info.mystery_man_button"))
                             else
-                                DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], '[E] To buy / [G] Start a mission')
+                                DrawText3D(dealer["coords"]["x"], dealer["coords"]["y"], dealer["coords"]["z"], Lang:t("info.other_dealers_button"))
                             end
                             if IsControlJustPressed(0, 38) then
                                 buyDealerStuff()
@@ -69,7 +67,7 @@ CreateThread(function()
                                     if player ~= -1 and distance < 5.0 then
                                         local playerId = GetPlayerServerId(player)
                                         isHealingPerson = true
-                                        QBCore.Functions.Progressbar("hospital_revive", "Put person back on their feet..", 5000, false, true, {
+                                        QBCore.Functions.Progressbar("hospital_revive", Lang:t("info.reviving_player"), 5000, false, true, {
                                             disableMovement = false,
                                             disableCarMovement = false,
                                             disableMouse = false,
@@ -81,24 +79,23 @@ CreateThread(function()
                                         }, {}, {}, function() -- Done
                                             isHealingPerson = false
                                             StopAnimTask(PlayerPedId(), healAnimDict, "exit", 1.0)
-                                            QBCore.Functions.Notify("You have helped a person!")
+                                            QBCore.Functions.Notify(Lang:t("success.helped_player"), "success")
                                             TriggerServerEvent("hospital:server:RevivePlayer", playerId, true)
                                         end, function() -- Cancel
                                             isHealingPerson = false
                                             StopAnimTask(PlayerPedId(), healAnimDict, "exit", 1.0)
-                                            QBCore.Functions.Notify("Failed!", "error")
                                         end)
                                     else
-                                        QBCore.Functions.Notify("There is no one nearby..", "error")
+                                        QBCore.Functions.Notify(Lang:t("error.no_player_nearby"), "error")
                                     end
                                 else
                                     if waitingDelivery == nil then
-                                        TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "These are the products, I\'ll keep in touch through email")
+                                        TriggerEvent("chatMessage", Lang:t("info.dealer_name", {dealerName = Config.Dealers[currentDealer]["name"]}), "info", Lang:t("info.sending_delivery_email"))
                                         requestDelivery()
                                         interacting = false
                                         dealerIsHome = false
                                     else
-                                        TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "error", 'You still need to complete a delivery, what are you waiting for?!')
+                                        TriggerEvent("chatMessage", Lang:t("info.dealer_name", {dealerName = Config.Dealers[currentDealer]["name"]}), "error", Lang:t("error.pending_delivery"))
                                     end
                                 end
                             end
@@ -157,7 +154,7 @@ function knockDealerDoor()
         else
             knockDoorAnim(false)
         end
-    end  
+    end
 end
 
 function buyDealerStuff()
@@ -194,12 +191,12 @@ function knockDoorAnim(home)
         Wait(1000)
         dealerIsHome = true
         if Config.Dealers[currentDealer]["name"] == "Mystery man" then
-            TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "normal", 'Hello my child, what can I do for you')
+            TriggerEvent("chatMessage", Lang:t("info.dealer_name", {dealerName = Config.Dealers[currentDealer]["name"]}), "info", Lang:t("info.mystery_man_knock_message"))
         elseif Config.Dealers[currentDealer]["name"] == "Fred" then
             dealerIsHome = false
-            TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "normal", 'Unfortunately I don\'t do business anymore ... You should have treated me better')
+            TriggerEvent("chatMessage", Lang:t("info.dealer_name", {dealerName = Config.Dealers[currentDealer]["name"]}), "info", Lang:t("info.treated_fred_bad"))
         else
-            TriggerEvent("chatMessage", "Dealer "..Config.Dealers[currentDealer]["name"], "normal", 'Yo '..myData.charinfo.firstname..', what can I do for you?')
+            TriggerEvent("chatMessage", Lang:t("info.dealer_name", {dealerName = Config.Dealers[currentDealer]["name"]}), "info", Lang:t("info.fred_knock_message", {firstName = myData.charinfo.firstname}))
         end
         -- knockTimeout()
     else
@@ -213,17 +210,15 @@ function knockDoorAnim(home)
         Wait(3500)
         TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(1000)
-        QBCore.Functions.Notify('It looks like no one is home..', 'error', 3500)
+        QBCore.Functions.Notify(Lang:t("info.no_one_home"), 'primary', 3500)
     end
 end
 
-RegisterNetEvent('qb-drugs:client:updateDealerItems')
-AddEventHandler('qb-drugs:client:updateDealerItems', function(itemData, amount)
+RegisterNetEvent('qb-drugs:client:updateDealerItems', function(itemData, amount)
     TriggerServerEvent('qb-drugs:server:updateDealerItems', itemData, amount, currentDealer)
 end)
 
-RegisterNetEvent('qb-drugs:client:setDealerItems')
-AddEventHandler('qb-drugs:client:setDealerItems', function(itemData, amount, dealer)
+RegisterNetEvent('qb-drugs:client:setDealerItems', function(itemData, amount, dealer)
     Config.Dealers[dealer]["products"][itemData.slot].amount = Config.Dealers[dealer]["products"][itemData.slot].amount - amount
 end)
 
@@ -243,7 +238,7 @@ function requestDelivery()
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[currentDealer]["name"],
             subject = "Delivery Location",
-            message = "Here is all info about the delivery, <br>Items: <br> "..amount.."x "..QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"].."<br><br> be in time!!",
+            message = Lang:t("info.delivery_info_email", {itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"]}),
             button = {
                 enabled = true,
                 buttonEvent = "qb-drugs:client:setLocation",
@@ -254,11 +249,8 @@ function requestDelivery()
 end
 
 function randomDeliveryItemOnRep()
-    local ped = PlayerPedId()
     local myRep = QBCore.Functions.GetPlayerData().metadata["dealerrep"]
-
     retval = nil
-
     for k, v in pairs(Config.DeliveryItems) do
         if Config.DeliveryItems[k]["minrep"] <= myRep then
             local availableItems = {}
@@ -274,16 +266,15 @@ end
 
 function setMapBlip(x, y)
     SetNewWaypoint(x, y)
-    QBCore.Functions.Notify('The route to the delivery location has been set on your map.', 'success');
+    QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success');
 end
 
-RegisterNetEvent('qb-drugs:client:setLocation')
-AddEventHandler('qb-drugs:client:setLocation', function(locationData)
+RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
     if activeDelivery == nil then
         activeDelivery = locationData
     else
         setMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
-        QBCore.Functions.Notify('You still have an open delivery...')
+        QBCore.Functions.Notify(Lang:t("error.pending_delivery"), 'error')
         return
     end
 
@@ -294,36 +285,26 @@ AddEventHandler('qb-drugs:client:setLocation', function(locationData)
     setMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
 
     CreateThread(function()
-        while true do
-
+        while activeDelivery do
             local ped = PlayerPedId()
             local pos = GetEntityCoords(ped)
             local inDeliveryRange = false
-
-            if activeDelivery ~= nil then
-                local dist = #(pos - vector3(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"]))
-
-                if dist < 15 then
-                    inDeliveryRange = true
-                    if dist < 1.5 then
-                        DrawText3D(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"], '[E] '..activeDelivery["amount"]..'x '..QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]..' deliver.')
-
-                        if IsControlJustPressed(0, 38) then
-                            deliverStuff(activeDelivery)
-                            activeDelivery = nil
-                            waitingDelivery = nil
-                            break
-                        end
+            local dist = #(pos - vector3(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"]))
+            if dist < 15 then
+                inDeliveryRange = true
+                if dist < 1.5 then
+                    DrawText3D(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"], Lang:t("info.deliver_items_button", {itemAmount = activeDelivery["amount"], itemLabel = QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]}))
+                    if IsControlJustPressed(0, 38) then
+                        deliverStuff(activeDelivery)
+                        activeDelivery = nil
+                        waitingDelivery = nil
+                        break
                     end
                 end
-
-                if not inDeliveryRange then
-                    Wait(1500)
-                end
-            else
-                break
             end
-
+            if not inDeliveryRange then
+                Wait(1500)
+            end
             Wait(3)
         end
     end)
@@ -331,17 +312,11 @@ end)
 
 function deliveryTimer()
     CreateThread(function()
-        while true do
-
-            if deliveryTimeout - 1 > 0 then
-                deliveryTimeout = deliveryTimeout - 1
-            else
-                deliveryTimeout = 0
-                break
-            end
-
+        while deliveryTimeout - 1 > 0 do
+            deliveryTimeout -= 1
             Wait(1000)
         end
+        deliveryTimeout = 0
     end)
 end
 
@@ -351,7 +326,7 @@ function deliverStuff(activeDelivery)
         Wait(500)
         TriggerEvent('animations:client:EmoteCommandStart', {"bumbin"})
         checkPedDistance()
-        QBCore.Functions.Progressbar("work_dropbox", "Delivering products..", 3500, false, true, {
+        QBCore.Functions.Progressbar("work_dropbox", Lang:t("info.delivering_products"), 3500, false, true, {
             disableMovement = true,
             disableCarMovement = true,
             disableMouse = false,
@@ -360,7 +335,6 @@ function deliverStuff(activeDelivery)
             TriggerServerEvent('qb-drugs:server:succesDelivery', activeDelivery, true)
         end, function() -- Cancel
             ClearPedTasks(PlayerPedId())
-            QBCore.Functions.Notify("Canceled..", "error")
         end)
     else
         TriggerServerEvent('qb-drugs:server:succesDelivery', activeDelivery, false)
@@ -398,12 +372,10 @@ function doPoliceAlert()
     if street2 ~= nil then
         streetLabel = streetLabel .. " " .. street2
     end
-
     TriggerServerEvent('qb-drugs:server:callCops', streetLabel, pos)
 end
 
-RegisterNetEvent('qb-drugs:client:robberyCall')
-AddEventHandler('qb-drugs:client:robberyCall', function(msg, streetLabel, coords)
+RegisterNetEvent('qb-drugs:client:robberyCall', function(msg, streetLabel, coords)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
     TriggerEvent("chatMessage", "911-ALERT", "error", msg)
     local transG = 250
@@ -414,7 +386,7 @@ AddEventHandler('qb-drugs:client:robberyCall', function(msg, streetLabel, coords
     SetBlipAlpha(blip, transG)
     SetBlipScale(blip, 1.0)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentString("911: Drug Dealing")
+    AddTextComponentString(Lang:t("info.drug_deal_alert"))
     EndTextCommandSetBlipName(blip)
     while transG ~= 0 do
         Wait(180 * 4)
@@ -428,31 +400,29 @@ AddEventHandler('qb-drugs:client:robberyCall', function(msg, streetLabel, coords
     end
 end)
 
-RegisterNetEvent('qb-drugs:client:sendDeliveryMail')
-AddEventHandler('qb-drugs:client:sendDeliveryMail', function(type, deliveryData)
+RegisterNetEvent('qb-drugs:client:sendDeliveryMail', function(type, deliveryData)
     if type == 'perfect' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
             subject = "Delivery",
-            message = "You did good work, hope to see you again ;)<br><br>Groeten, "..Config.Dealers[deliveryData["dealer"]]["name"]
+            message = Lang:t("info.perfect_delivery", {dealerName = Config.Dealers[deliveryData["dealer"]]["name"]})
         })
     elseif type == 'bad' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
             subject = "Delivery",
-            message = "I have received complaints about your delivery, don\'t let this happen again..."
+            message = Lang:t("info.bad_delivery")
         })
     elseif type == 'late' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
             subject = "Delivery",
-            message = "You weren\'t on time. Did you have more important things to do than business?"
+            message = Lang:t("info.late_delivery")
         })
     end
 end)
 
-RegisterNetEvent('qb-drugs:client:CreateDealer')
-AddEventHandler('qb-drugs:client:CreateDealer', function(dealerName, minTime, maxTime)
+RegisterNetEvent('qb-drugs:client:CreateDealer', function(dealerName, minTime, maxTime)
     local ped = PlayerPedId()
     local loc = GetEntityCoords(ped)
     local DealerData = {
@@ -471,15 +441,12 @@ AddEventHandler('qb-drugs:client:CreateDealer', function(dealerName, minTime, ma
     TriggerServerEvent('qb-drugs:server:CreateDealer', DealerData)
 end)
 
-RegisterNetEvent('qb-drugs:client:RefreshDealers')
-AddEventHandler('qb-drugs:client:RefreshDealers', function(DealerData)
+RegisterNetEvent('qb-drugs:client:RefreshDealers', function(DealerData)
     Config.Dealers = DealerData
 end)
 
-RegisterNetEvent('qb-drugs:client:GotoDealer')
-AddEventHandler('qb-drugs:client:GotoDealer', function(DealerData)
+RegisterNetEvent('qb-drugs:client:GotoDealer', function(DealerData)
     local ped = PlayerPedId()
-
     SetEntityCoords(ped, DealerData["coords"]["x"], DealerData["coords"]["y"], DealerData["coords"]["z"])
-    QBCore.Functions.Notify('You have been teleported : '.. DealerData["name"] .. ' Good luck!', 'success')
+    QBCore.Functions.Notify(Lang:t("success.teleported_to_dealer", {dealerName = DealerData["name"]}), 'success')
 end)

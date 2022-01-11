@@ -108,7 +108,7 @@ RegisterNetEvent('qb-drugs:server:succesDelivery', function(deliveryData, inTime
 end)
 
 RegisterNetEvent('qb-drugs:server:callCops', function(streetLabel, coords)
-    local msg = Lang:t("info.police_server_message")
+    local msg = Lang:t("info.police_message_server")
     local alertData = {
         title = Lang:t("info.drug_deal"),
         coords = {

@@ -151,7 +151,7 @@ QBCore.Commands.Add("deletedealer", Lang:t("info.deletedealer_command_desc"), {{
 }}, true, function(source, args)
     local dealerName = args[1]
     local result = MySQL.Sync.fetchScalar('SELECT * FROM dealers WHERE name = ?', {dealerName})
-    if result[1] ~= nil then
+    if result then
         MySQL.Async.execute('DELETE FROM dealers WHERE name = ?', {dealerName})
         Config.Dealers[dealerName] = nil
         TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)

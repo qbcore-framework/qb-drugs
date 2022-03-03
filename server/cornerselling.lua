@@ -36,7 +36,7 @@ RegisterNetEvent('qb-drugs:Server:ReturnStolenDrugs', function(item, amount)
     if not Player then return end
 
     local stolen = StolenDrugs[src]
-    if stolen and stolen.item == item and stolen.amount = amount then
+    if stolen and stolen.item == item and stolen.amount == amount then
         StolenDrugs[src] = nil
         Player.Functions.AddItem(item, amount)
     else

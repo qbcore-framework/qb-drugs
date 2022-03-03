@@ -1,4 +1,5 @@
 local QBCore = exports['qb-core']:GetCoreObject()
+local StolenDrugs = {}
 
 QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(source, cb)
     local AvailableDrugs = {}
@@ -22,6 +23,30 @@ QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs
             cb(nil)
         end
     end
+end)
+
+RegisterNetEvent('qb-drugs:Server:PedStoleDrugs', function(data)
+    local src = source
+    StolenDrugs[src] = data
+end)
+
+RegisterNetEvent('qb-drugs:Server:ReturnStolenDrugs', function(item, amount)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+
+    local stolen = StolenDrugs[src]
+    if stolen and stolen.item == item and stolen.amount = amount then
+        StolenDrugs[src] = nil
+        Player.Functions.AddItem(item, amount)
+    else
+        -- Exploiting, or got multiple drugs stolen?
+    end
+end)
+
+AddEventHandler("playerDropped", function()
+	local src = source
+    StolenDrugs[src] = nil
 end)
 
 RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(item, amount, price)

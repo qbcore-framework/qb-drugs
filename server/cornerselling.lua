@@ -39,7 +39,7 @@ RegisterNetEvent('qb-drugs:Server:ReturnStolenDrugs', function(item, amount)
     if stolen and stolen.item == item and stolen.amount == amount then
         StolenDrugs[src] = nil
         Player.Functions.AddItem(stolen.item, amount)
-        TriggerEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[stolen.item], "add")
+        TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[stolen.item], "add")
     else
         -- Exploiting, or got multiple drugs stolen?
     end

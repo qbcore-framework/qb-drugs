@@ -165,7 +165,7 @@ local function SellToPed(ped)
     TaskStartScenarioInPlace(ped, "WORLD_HUMAN_STAND_IMPATIENT_UPRIGHT", 0, false)
 
     if hasTarget then
-        while pedDist < 1.5 do
+        while pedDist < 1.5 and not IsPedDeadOrDying(ped) do
             coords = GetEntityCoords(PlayerPedId(), true)
             pedCoords = GetEntityCoords(ped)
             pedDist = #(coords - pedCoords)

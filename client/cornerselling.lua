@@ -283,7 +283,7 @@ CreateThread(function()
                     end
                 end
                 local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
-                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) and GetPedType(closetPed) ~= 28 then
+                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) and GetPedType(closestPed) ~= 28 then
                     SellToPed(closestPed)
                 end
             end

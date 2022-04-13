@@ -84,14 +84,7 @@ local function toFarAway()
 end
 
 local function callPolice(coords)
-    local title = policeMessage[math.random(1, #policeMessage)]
-    local pCoords = GetEntityCoords(PlayerPedId())
-    local s1, s2 = GetStreetNameAtCoord(pCoords.x, pCoords.y, pCoords.z)
-    local street1 = GetStreetNameFromHashKey(s1)
-    local street2 = GetStreetNameFromHashKey(s2)
-    local streetLabel = street1
-    if street2 ~= nil then streetLabel = street1..' '..street2 end
-    TriggerServerEvent('police:server:PoliceAlertMessage', title, streetLabel, coords)
+    TriggerServerEvent('police:server:policeAlert', 'Drug sale in progress')
     hasTarget = false
     Wait(5000)
 end

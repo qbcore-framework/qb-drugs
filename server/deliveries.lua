@@ -29,7 +29,7 @@ RegisterNetEvent('qb-drugs:server:giveDeliveryItems', function(amount)
     TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["weed_brick"], "add")
 end)
 
-QBCore.Functions.CreateCallback('qb-drugs:server:RequestConfig', function(source, cb)
+QBCore.Functions.CreateCallback('qb-drugs:server:RequestConfig', function(_, cb)
     cb(Config.Dealers)
 end)
 
@@ -107,7 +107,7 @@ RegisterNetEvent('qb-drugs:server:succesDelivery', function(deliveryData, inTime
     end
 end)
 
-RegisterNetEvent('qb-drugs:server:callCops', function(streetLabel, coords)
+RegisterNetEvent('qb-drugs:server:callCops', function(coords)
     local msg = Lang:t("info.police_message_server")
     local alertData = {
         title = Lang:t("info.drug_deal"),
@@ -118,11 +118,11 @@ RegisterNetEvent('qb-drugs:server:callCops', function(streetLabel, coords)
         },
         description = msg
     }
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
+    for _, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
         if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
-                TriggerClientEvent("qb-drugs:client:robberyCall", Player.PlayerData.source, msg, streetLabel, coords)
+                TriggerClientEvent("qb-drugs:client:robberyCall", Player.PlayerData.source, msg, coords)
                 TriggerClientEvent("qb-phone:client:addPoliceAlert", Player.PlayerData.source, alertData)
             end
         end
@@ -161,10 +161,10 @@ QBCore.Commands.Add("deletedealer", Lang:t("info.deletedealer_command_desc"), {{
     end
 end, "admin")
 
-QBCore.Commands.Add("dealers", Lang:t("info.dealers_command_desc"), {}, false, function(source, args)
+QBCore.Commands.Add("dealers", Lang:t("info.dealers_command_desc"), {}, false, function(source, _)
     local DealersText = ""
     if Config.Dealers ~= nil and next(Config.Dealers) ~= nil then
-        for k, v in pairs(Config.Dealers) do
+        for _, v in pairs(Config.Dealers) do
             DealersText = DealersText .. Lang:t("info.list_dealers_name_prefix") .. v["name"] .. "<br>"
         end
         TriggerClientEvent('chat:addMessage', source, {
@@ -193,7 +193,7 @@ CreateThread(function()
     Wait(500)
     local dealers = MySQL.Sync.fetchAll('SELECT * FROM dealers', {})
     if dealers[1] ~= nil then
-        for k, v in pairs(dealers) do
+        for _, v in pairs(dealers) do
             local coords = json.decode(v.coords)
             local time = json.decode(v.time)
 

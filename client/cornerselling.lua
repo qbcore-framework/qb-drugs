@@ -5,14 +5,11 @@ local lastPed = {}
 local stealingPed = nil
 local stealData = {}
 local availableDrugs = {}
-local policeMessage = {
-    Lang:t("info.suspicious_situation"),
-    Lang:t("info.possible_drug_dealing"),
-}
+local currentOfferDrug = nil
 
 CurrentCops = 0
 
-RegisterNetEvent('qb-drugs:client:cornerselling', function(data)
+RegisterNetEvent('qb-drugs:client:cornerselling', function()
     QBCore.Functions.TriggerCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(result)
         if CurrentCops >= Config.MinimumDrugSalePolice then
             if result ~= nil then
@@ -83,15 +80,8 @@ local function toFarAway()
     Wait(5000)
 end
 
-local function callPolice(coords)
-    local title = policeMessage[math.random(1, #policeMessage)]
-    local pCoords = GetEntityCoords(PlayerPedId())
-    local s1, s2 = GetStreetNameAtCoord(pCoords.x, pCoords.y, pCoords.z)
-    local street1 = GetStreetNameFromHashKey(s1)
-    local street2 = GetStreetNameFromHashKey(s2)
-    local streetLabel = street1
-    if street2 ~= nil then streetLabel = street1..' '..street2 end
-    TriggerServerEvent('police:server:PoliceAlertMessage', title, streetLabel, coords)
+local function callPolice()
+    TriggerServerEvent('police:server:policeAlert', 'Drug sale in progress')
     hasTarget = false
     Wait(5000)
 end
@@ -115,7 +105,7 @@ local function SellToPed(ped)
         hasTarget = false
         return
     elseif succesChance >= 19 then
-        callPolice(GetEntityCoords(ped))
+        callPolice()
         return
     end
 
@@ -165,7 +155,7 @@ local function SellToPed(ped)
     TaskStartScenarioInPlace(ped, "WORLD_HUMAN_STAND_IMPATIENT_UPRIGHT", 0, false)
 
     if hasTarget then
-        while pedDist < 1.5 do
+        while pedDist < 1.5 and not IsPedDeadOrDying(ped) do
             coords = GetEntityCoords(PlayerPedId(), true)
             pedCoords = GetEntityCoords(ped)
             pedDist = #(coords - pedCoords)
@@ -179,14 +169,6 @@ local function SellToPed(ped)
                 }
                 TriggerServerEvent('qb-drugs:Server:PedStoleDrugs', stealData)
                 hasTarget = false
-                local rand = (math.random(6,9) / 100) + 0.3
-                local rand2 = (math.random(6,9) / 100) + 0.3
-                if math.random(10) > 5 then
-                    rand = 0.0 - rand
-                end
-                if math.random(10) > 5 then
-                    rand2 = 0.0 - rand2
-                end
                 local moveto = GetEntityCoords(PlayerPedId())
                 local movetoCoords = {x = moveto.x + math.random(100, 500), y = moveto.y + math.random(100, 500), z = moveto.z, }
                 ClearPedTasksImmediately(ped)
@@ -239,7 +221,7 @@ end
 
 CreateThread(function()
     while true do
-        sleep = 1000
+        local sleep = 1000
         if stealingPed ~= nil and stealData ~= nil then
             sleep = 0
             if IsEntityDead(stealingPed) then
@@ -269,7 +251,7 @@ end)
 
 CreateThread(function()
     while true do
-        sleep = 1000
+        local sleep = 1000
         if cornerselling then
             sleep = 0
             local player = PlayerPedId()
@@ -277,13 +259,13 @@ CreateThread(function()
             if not hasTarget then
                 local PlayerPeds = {}
                 if next(PlayerPeds) == nil then
-                    for _, player in ipairs(GetActivePlayers()) do
-                        local ped = GetPlayerPed(player)
+                    for _, activePlayer in ipairs(GetActivePlayers()) do
+                        local ped = GetPlayerPed(activePlayer)
                         PlayerPeds[#PlayerPeds+1] = ped
                     end
                 end
                 local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
-                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) then
+                if closestDistance < 15.0 and closestPed ~= 0 and not IsPedInAnyVehicle(closestPed) and GetPedType(closestPed) ~= 28 then
                     SellToPed(closestPed)
                 end
             end

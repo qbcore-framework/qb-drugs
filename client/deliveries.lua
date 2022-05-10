@@ -7,6 +7,7 @@ local deliveryTimeout = 0
 local isHealingPerson = false
 local healAnimDict = "mini@cpr@char_a@cpr_str"
 local healAnim = "cpr_pumpchest"
+local nearDealer = false
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     QBCore.Functions.TriggerCallback('qb-drugs:server:RequestConfig', function(DealerConfig)
@@ -163,7 +164,7 @@ function buyDealerStuff()
     repItems.items = {}
     repItems.slots = 30
 
-    for k, v in pairs(Config.Dealers[currentDealer]["products"]) do
+    for k, _ in pairs(Config.Dealers[currentDealer]["products"]) do
         if QBCore.Functions.GetPlayerData().metadata["dealerrep"] >= Config.Dealers[currentDealer]["products"][k].minrep then
             repItems.items[k] = Config.Dealers[currentDealer]["products"][k]
         end
@@ -250,8 +251,8 @@ end
 
 function randomDeliveryItemOnRep()
     local myRep = QBCore.Functions.GetPlayerData().metadata["dealerrep"]
-    retval = nil
-    for k, v in pairs(Config.DeliveryItems) do
+    local retval = nil
+    for k, _ in pairs(Config.DeliveryItems) do
         if Config.DeliveryItems[k]["minrep"] <= myRep then
             local availableItems = {}
             availableItems[#availableItems+1] = k
@@ -295,7 +296,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
                 if dist < 1.5 then
                     DrawText3D(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"], Lang:t("info.deliver_items_button", {itemAmount = activeDelivery["amount"], itemLabel = QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]}))
                     if IsControlJustPressed(0, 38) then
-                        deliverStuff(activeDelivery)
+                        deliverStuff()
                         activeDelivery = nil
                         waitingDelivery = nil
                         break
@@ -320,7 +321,7 @@ function deliveryTimer()
     end)
 end
 
-function deliverStuff(activeDelivery)
+function deliverStuff()
     if deliveryTimeout > 0 then
         TriggerEvent('animations:client:EmoteCommandStart', {"c"})
         Wait(500)
@@ -350,7 +351,7 @@ function checkPedDistance()
             PlayerPeds[#PlayerPeds+1] = ped
         end
     end
-	local coords = GetEntityCoords(player)
+	local coords = GetEntityCoords(PlayerPedId())
     local closestPed, closestDistance = QBCore.Functions.GetClosestPed(coords, PlayerPeds)
 
     if closestDistance < 40 and closestPed ~= 0 then
@@ -365,17 +366,10 @@ end
 function doPoliceAlert()
     local ped = PlayerPedId()
     local pos = GetEntityCoords(ped)
-    local s1, s2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z)
-    local street1 = GetStreetNameFromHashKey(s1)
-    local street2 = GetStreetNameFromHashKey(s2)
-    local streetLabel = street1
-    if street2 ~= nil then
-        streetLabel = streetLabel .. " " .. street2
-    end
-    TriggerServerEvent('qb-drugs:server:callCops', streetLabel, pos)
+    TriggerServerEvent('qb-drugs:server:callCops', pos)
 end
 
-RegisterNetEvent('qb-drugs:client:robberyCall', function(msg, streetLabel, coords)
+RegisterNetEvent('qb-drugs:client:robberyCall', function(msg, coords)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
     TriggerEvent("chatMessage", "911-ALERT", "error", msg)
     local transG = 250

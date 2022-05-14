@@ -297,7 +297,6 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
                     DrawText3D(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"], activeDelivery["coords"]["z"], Lang:t("info.deliver_items_button", {itemAmount = activeDelivery["amount"], itemLabel = QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]}))
                     if IsControlJustPressed(0, 38) then
                         deliverStuff()
-                        activeDelivery = nil
                         waitingDelivery = nil
                         break
                     end
@@ -334,11 +333,13 @@ function deliverStuff()
             disableCombat = true,
         }, {}, {}, {}, function() -- Done
             TriggerServerEvent('qb-drugs:server:succesDelivery', activeDelivery, true)
+            activeDelivery = nil
         end, function() -- Cancel
             ClearPedTasks(PlayerPedId())
         end)
     else
         TriggerServerEvent('qb-drugs:server:succesDelivery', activeDelivery, false)
+        activeDelivery = nil
     end
     deliveryTimeout = 0
 end

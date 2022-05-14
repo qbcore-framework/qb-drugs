@@ -4,6 +4,16 @@ local function GetDealers()
     return Config.Dealers
 end
 
+local function GetCurrentCops()
+    local PoliceCount = 0
+    for k, v in pairs(QBCore.Functions.GetQBPlayers()) do
+        if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
+            PoliceCount = PoliceCount + 1
+        end
+    end
+    return PoliceCount
+end
+
 exports("GetDealers", GetDealers)
 
 RegisterNetEvent('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
@@ -43,6 +53,7 @@ RegisterNetEvent('qb-drugs:server:succesDelivery', function(deliveryData, inTime
             deliveryData["amount"] then
             Player.Functions.RemoveItem('weed_brick', deliveryData["amount"])
             local price = 3000
+            local CurrentCops = GetCurrentCops()
             if CurrentCops == 1 then
                 price = 4000
             elseif CurrentCops == 2 then

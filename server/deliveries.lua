@@ -150,9 +150,9 @@ QBCore.Commands.Add("deletedealer", Lang:t("info.deletedealer_command_desc"), {{
     help = Lang:t("info.deletedealer_command_help1_help")
 }}, true, function(source, args)
     local dealerName = args[1]
-    local result = MySQL.Sync.fetchScalar('SELECT * FROM dealers WHERE name = ?', {dealerName})
+    local result = MySQL.scalar.await('SELECT * FROM dealers WHERE name = ?', {dealerName})
     if result then
-        MySQL.Async.execute('DELETE FROM dealers WHERE name = ?', {dealerName})
+        MySQL.query('DELETE FROM dealers WHERE name = ?', {dealerName})
         Config.Dealers[dealerName] = nil
         TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
         TriggerClientEvent('QBCore:Notify', source, Lang:t("success.dealer_deleted", {dealerName = dealerName}), "success")
@@ -191,7 +191,7 @@ end, "admin")
 
 CreateThread(function()
     Wait(500)
-    local dealers = MySQL.Sync.fetchAll('SELECT * FROM dealers', {})
+    local dealers = MySQL.query.await('SELECT * FROM dealers', {})
     if dealers[1] ~= nil then
         for _, v in pairs(dealers) do
             local coords = json.decode(v.coords)
@@ -218,11 +218,11 @@ end)
 RegisterNetEvent('qb-drugs:server:CreateDealer', function(DealerData)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local result = MySQL.Sync.fetchAll('SELECT * FROM dealers WHERE name = ?', {DealerData.name})
+    local result = MySQL.query.await('SELECT * FROM dealers WHERE name = ?', {DealerData.name})
     if result[1] ~= nil then
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.dealer_already_exists"), "error")
     else
-        MySQL.Async.insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?, ?, ?, ?)', {DealerData.name, json.encode(DealerData.pos), json.encode(DealerData.time), Player.PlayerData.citizenid}, function()
+        MySQL.insert('INSERT INTO dealers (name, coords, time, createdby) VALUES (?, ?, ?, ?)', {DealerData.name, json.encode(DealerData.pos), json.encode(DealerData.time), Player.PlayerData.citizenid}, function()
             Config.Dealers[DealerData.name] = {
                 ["name"] = DealerData.name,
                 ["coords"] = {

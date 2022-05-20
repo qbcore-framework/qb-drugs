@@ -167,6 +167,7 @@ local function SellToPed(ped)
                     item = availableDrugs[drugType].item,
                     amount = bagAmount,
                 }
+                TriggerServerEvent('qb-drugs:Server:PedStoleDrugs', stealData)
                 hasTarget = false
                 local moveto = GetEntityCoords(PlayerPedId())
                 local movetoCoords = {x = moveto.x + math.random(100, 500), y = moveto.y + math.random(100, 500), z = moveto.z, }
@@ -237,8 +238,7 @@ CreateThread(function()
                         TaskPlayAnim(ped, "pickup_object" ,"pickup_low" ,8.0, -8.0, -1, 1, 0, false, false, false )
                         Wait(2000)
                         ClearPedTasks(ped)
-                        TriggerServerEvent("QBCore:Server:AddItem", stealData.item, stealData.amount)
-                        TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
+                        TriggerServerEvent("qb-drugs:Server:ReturnStolenDrugs", stealData.item, stealData.amount)
                         stealingPed = nil
                         stealData = {}
                     end

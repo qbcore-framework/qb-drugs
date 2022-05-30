@@ -1,5 +1,5 @@
 Config = Config or {}
-Config.MinimumDrugSalePolice = 2
+Config.MinimumDrugSalePolice = GetConvarInt("drug_minimum_sale_police") or 0
 
 Config.Products = {
     [1] = {

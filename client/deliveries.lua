@@ -116,15 +116,13 @@ end
 
 local function RandomDeliveryItemOnRep()
     local myRep = QBCore.Functions.GetPlayerData().metadata["dealerrep"]
-    local retval = nil
     local availableItems = {}
     for k, _ in pairs(Config.DeliveryItems) do
         if Config.DeliveryItems[k]["minrep"] <= myRep then
             availableItems[#availableItems+1] = k
         end
     end
-    retval = availableItems[math.random(1, #availableItems)]
-    return retval
+    return availableItems[math.random(1, #availableItems)]
 end
 
 local function RequestDelivery()

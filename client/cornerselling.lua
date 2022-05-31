@@ -9,6 +9,7 @@ local currentOfferDrug = nil
 local CurrentCops = 0
 local textDrawn = false
 local zoneMade = false
+local PedDist = 0
 
 -- Functions
 local function LoadAnimDict(dict)

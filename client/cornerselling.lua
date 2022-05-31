@@ -1,6 +1,5 @@
 local cornerselling = false
 local hasTarget = false
-local startLocation = nil
 local lastPed = {}
 local stealingPed = nil
 local stealData = {}
@@ -23,9 +22,7 @@ local function TooFarAway()
     LocalPlayer.state:set("inv_busy", false, true)
     cornerselling = false
     hasTarget = false
-    startLocation = nil
     availableDrugs = {}
-    Wait(5000)
 end
 
 local function PoliceCall()
@@ -288,7 +285,6 @@ local function SellToPed(ped)
                         end
                     end
                     hasTarget = false
-                    pedDist2 = 5
                     SetPedKeepTask(ped, false)
                     SetEntityAsNoLongerNeeded(ped)
                     ClearPedTasksImmediately(ped)
@@ -307,7 +303,7 @@ local function ToggleSelling()
         cornerselling = true
         LocalPlayer.state:set("inv_busy", true, true)
         QBCore.Functions.Notify(Lang:t("info.started_selling_drugs"))
-        startLocation = GetEntityCoords(PlayerPedId())
+        local startLocation = GetEntityCoords(PlayerPedId())
         CreateThread(function()
             while cornerselling do
                 local player = PlayerPedId()

@@ -1,21 +1,16 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+QBCore = exports['qb-core']:GetCoreObject()
 
 -- Functions
-
-local function GetDealers()
+exports('GetDealers', function()
     return Config.Dealers
-end
-
-exports("GetDealers", GetDealers)
+end)
 
 -- Callbacks
-
 QBCore.Functions.CreateCallback('qb-drugs:server:RequestConfig', function(_, cb)
     cb(Config.Dealers)
 end)
 
 -- Events
-
 RegisterNetEvent('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -73,7 +68,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
                 Player.Functions.SetMetaData('dealerrep', (curRep + Config.DeliveryRepGain))
             end)
         else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.order_not_right"), 'error') -- on time incorrect amount
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.order_not_right"), 'error')-- on time incorrect amount
             if Player.Functions.GetItemByName(item).amount ~= nil then
                 local newItemAmount = Player.Functions.GetItemByName(item).amount
                 local modifiedPayout = deliveryData.itemData.payout * newItemAmount
@@ -126,7 +121,6 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
 end)
 
 -- Commands
-
 QBCore.Commands.Add("newdealer", Lang:t("info.newdealer_command_desc"), {{
     name = Lang:t("info.newdealer_command_help1_name"),
     help = Lang:t("info.newdealer_command_help1_help")
@@ -189,7 +183,7 @@ QBCore.Commands.Add("dealers", Lang:t("info.dealers_command_desc"), {}, false, f
             DealersText = DealersText .. Lang:t("info.list_dealers_name_prefix") .. v["name"] .. "<br>"
         end
         TriggerClientEvent('chat:addMessage', source, {
-            template = '<div class="chat-message advert"><div class="chat-message-body"><strong>'..Lang:t("info.list_dealers_title")..'</strong><br><br> ' .. DealersText .. '</div></div>',
+            template = '<div class="chat-message advert"><div class="chat-message-body"><strong>' .. Lang:t("info.list_dealers_title") .. '</strong><br><br> ' .. DealersText .. '</div></div>',
             args = {}
         })
     else
@@ -205,7 +199,7 @@ QBCore.Commands.Add("dealergoto", Lang:t("info.dealergoto_command_desc"), {{
     if Config.Dealers[DealerName] then
         local ped = GetPlayerPed(source)
         SetEntityCoords(ped, Config.Dealers[DealerName]['coords']['x'], Config.Dealers[DealerName]['coords']['y'], Config.Dealers[DealerName]['coords']['z'])
-        TriggerClientEvent('QBCore:Notify', source, Lang:t("success.teleported_to_dealer"), 'success')
+        TriggerClientEvent('QBCore:Notify', source, Lang:t("success.teleported_to_dealer", {dealerName = DealerName}), 'success')
     else
         TriggerClientEvent('QBCore:Notify', source, Lang:t("error.dealer_not_exists"), 'error')
     end
@@ -234,4 +228,5 @@ CreateThread(function()
             }
         end
     end
+    TriggerClientEvent('qb-drugs:client:RefreshDealers', -1, Config.Dealers)
 end)

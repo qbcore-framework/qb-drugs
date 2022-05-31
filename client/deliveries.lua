@@ -16,20 +16,9 @@ AddStateBagChangeHandler('isLoggedIn', nil, function(_, _, value)
         Wait(1000)
         InitZones()
     else
-        dealerCombo:destroy()
+        if not Config.UseTarget and dealerCombo then dealerCombo:destroy() end
     end
 end)
-
--- AddEventHandler('onResourceStart', function(resourceName) -- used for debugging and restarting script
---     if GetCurrentResourceName() == resourceName then
---         if not Config.UsingTarget then dealerCombo:destroy() end
---         QBCore.Functions.TriggerCallback('qb-drugs:server:RequestConfig', function(DealerConfig)
---             Config.Dealers = DealerConfig
---             Wait(1000)
---             InitZones()
---         end)
---     end
--- end)
 
 -- Functions
 
@@ -138,30 +127,35 @@ local function RandomDeliveryItemOnRep()
 end
 
 local function RequestDelivery()
-    GetClosestDealer()
-    local location = math.random(1, #Config.DeliveryLocations)
-    local amount = math.random(1, 3)
-    local item = RandomDeliveryItemOnRep()
-    waitingDelivery = {
-        ["coords"] = Config.DeliveryLocations[location]["coords"],
-        ["locationLabel"] = Config.DeliveryLocations[location]["label"],
-        ["amount"] = amount,
-        ["dealer"] = currentDealer,
-        ["itemData"] = Config.DeliveryItems[item]
-    }
-    TriggerServerEvent('qb-drugs:server:giveDeliveryItems', waitingDelivery)
-    SetTimeout(2000, function()
-        TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = Config.Dealers[currentDealer]["name"],
-            subject = "Delivery Location",
-            message = Lang:t("info.delivery_info_email", {itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"]}),
-            button = {
-                enabled = true,
-                buttonEvent = "qb-drugs:client:setLocation",
-                buttonData = waitingDelivery
-            }
-        })
-    end)
+    if not waitingDelivery then
+        GetClosestDealer()
+        local location = math.random(1, #Config.DeliveryLocations)
+        local amount = math.random(1, 3)
+        local item = RandomDeliveryItemOnRep()
+        waitingDelivery = {
+            ["coords"] = Config.DeliveryLocations[location]["coords"],
+            ["locationLabel"] = Config.DeliveryLocations[location]["label"],
+            ["amount"] = amount,
+            ["dealer"] = currentDealer,
+            ["itemData"] = Config.DeliveryItems[item]
+        }
+        QBCore.Functions.Notify(Lang:t("info.sending_delivery_email"), 'success')
+        TriggerServerEvent('qb-drugs:server:giveDeliveryItems', waitingDelivery)
+        SetTimeout(2000, function()
+            TriggerServerEvent('qb-phone:server:sendNewMail', {
+                sender = Config.Dealers[currentDealer]["name"],
+                subject = "Delivery Location",
+                message = Lang:t("info.delivery_info_email", {itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"]}),
+                button = {
+                    enabled = true,
+                    buttonEvent = "qb-drugs:client:setLocation",
+                    buttonData = waitingDelivery
+                }
+            })
+        end)
+    else
+        QBCore.Functions.Notify(Lang:t("error.pending_delivery"), 'error')
+    end
 end
 
 local function DeliveryTimer()
@@ -180,7 +174,7 @@ local function PoliceCall()
     end
 end
 
-local function deliverStuff()
+local function DeliverStuff()
     if deliveryTimeout > 0 then
         Wait(500)
         TriggerEvent('animations:client:EmoteCommandStart', {"bumbin"})
@@ -193,7 +187,11 @@ local function deliverStuff()
         }, {}, {}, {}, function() -- Done
             TriggerServerEvent('qb-drugs:server:successDelivery', activeDelivery, true)
             activeDelivery = nil
-            drugDeliveryZone:destroy()
+            if Config.UseTarget then
+                exports['qb-target']:RemoveZone('drugDeliveryZone')
+            else
+                drugDeliveryZone:destroy()
+            end
         end, function() -- Cancel
             ClearPedTasks(PlayerPedId())
         end)
@@ -227,11 +225,9 @@ function AwaitingInput()
                 end
                 if IsControlJustPressed(0, 47) then
                     if waitingDelivery then
-                        QBCore.Functions.Notify(Lang:t("error.pending_delivery"), 'error')
                         exports['qb-core']:KeyPressed()
                         waitingKeyPress = false
                     end
-                    QBCore.Functions.Notify(Lang:t("info.sending_delivery_email"), 'success')
                     RequestDelivery()
                     exports['qb-core']:KeyPressed()
                     dealerIsHome = false
@@ -244,17 +240,18 @@ function AwaitingInput()
 end
 
 function InitZones()
-    if Config.UsingTarget then
+    if Config.UseTarget then
         for k,v in pairs(Config.Dealers) do
-            exports["qb-target"]:AddBoxZone("Dealer_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
-                name = "Dealer_"..k,
+            exports["qb-target"]:AddBoxZone("dealer_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
+                name = "dealer_"..k,
                 heading = v.heading,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
+                debugPoly = true,
             }, {
                 options = {
                     {
-                        icon = 'fa-solid fa-user-secret',
+                        icon = 'fas fa-user-secret',
                         label = Lang:t("info.target_request"),
                         action = function()
                             RequestDelivery()
@@ -284,7 +281,7 @@ function InitZones()
                         end
                     },
                     {
-                        icon = 'fa-solid fa-user-secret',
+                        icon = 'fas fa-user-secret',
                         label = Lang:t("info.target_openshop"),
                         action = function()
                             OpenDealerShop()
@@ -316,7 +313,7 @@ function InitZones()
         for k,v in pairs(Config.Dealers) do
             dealerPoly[#dealerPoly+1] = BoxZone:Create(vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
                 heading = -20,
-                name="dealer"..k,
+                name="dealer_"..k,
                 debugPoly = false,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
@@ -343,7 +340,7 @@ end
 -- Events
 
 RegisterNetEvent('qb-drugs:client:RefreshDealers', function(DealerData)
-    if not Config.UsingTarget then dealerCombo:destroy() end
+    if not Config.UseTarget and dealerCombo then dealerCombo:destroy() end
     Config.Dealers = DealerData
     Wait(1000)
     InitZones()
@@ -367,19 +364,20 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
     deliveryTimeout = 300
     DeliveryTimer()
     SetMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
-    if Config.UsingTarget then
-        exports["qb-target"]:AddBoxZone('drugDeliveryZone', activeDelivery["coords"], 1.5, 1.5, {
+    if Config.UseTarget then
+        exports["qb-target"]:AddBoxZone('drugDeliveryZone', vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
             name = 'drugDeliveryZone',
             heading = 0,
             minZ = activeDelivery["coords"].z - 1,
             maxZ = activeDelivery["coords"].z + 1,
+            debugPoly = true
         }, {
             options = {
                 {
-                    icon = 'fa-solid fa-user-secret',
+                    icon = 'fas fa-user-secret',
                     label = Lang:t("info.target_deliver"),
                     action = function()
-                        deliverStuff()
+                        DeliverStuff()
                         waitingDelivery = nil
                     end,
                     canInteract = function()
@@ -392,7 +390,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
             distance = 1.5
         })
     else
-        drugDeliveryZone = BoxZone:Create(activeDelivery["coords"], 1.5, 1.5, {
+        drugDeliveryZone = BoxZone:Create(vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
             heading = 0,
             name="drugDelivery",
             debugPoly = true,
@@ -407,7 +405,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
                     while inDeliveryZone do
                         if IsControlJustPressed(0, 38) then
                             exports['qb-core']:KeyPressed()
-                            deliverStuff()
+                            DeliverStuff()
                             waitingDelivery = nil
                             break
                         end

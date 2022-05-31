@@ -1,6 +1,7 @@
 Config = Config or {}
 Config.Dealers = {}
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true'
+Config.PoliceCallChance = 15
 
 -- Shop Config
 Config.Products = {
@@ -97,7 +98,10 @@ Config.Products = {
 }
 
 -- Selling Config
-Config.MinimumDrugSalePolice = 2
+Config.SuccessChance = 50
+Config.ScamChance = 25
+Config.RobberyChance = 25
+Config.MinimumDrugSalePolice = 0
 
 Config.CornerSellingDrugsList = {
     "weed_white-widow",

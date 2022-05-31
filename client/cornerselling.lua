@@ -9,7 +9,6 @@ local currentOfferDrug = nil
 local CurrentCops = 0
 local textDrawn = false
 local zoneMade = false
-local pedDist = 0
 
 -- Functions
 local function LoadAnimDict(dict)
@@ -159,7 +158,6 @@ local function SellToPed(ped)
     local coords = GetEntityCoords(PlayerPedId(), true)
     local pedCoords = GetEntityCoords(ped)
     local pedDist = #(coords - pedCoords)
-
     if getRobbed <= Config.RobberyChance then
         TaskGoStraightToCoord(ped, coords, 15.0, -1, 0.0, 0.0)
     else
@@ -176,7 +174,6 @@ local function SellToPed(ped)
         end
         TaskGoStraightToCoord(ped, coords, 1.2, -1, 0.0, 0.0)
         pedDist = #(coords - pedCoords)
-
         Wait(100)
     end
 
@@ -186,9 +183,9 @@ local function SellToPed(ped)
 
     if hasTarget then
         while pedDist < 1.5 and not IsPedDeadOrDying(ped) do
-            coords = GetEntityCoords(PlayerPedId(), true)
-            pedCoords = GetEntityCoords(ped)
-            pedDist = #(coords - pedCoords)
+            local coords2 = GetEntityCoords(PlayerPedId(), true)
+            local pedCoords2 = GetEntityCoords(ped)
+            local pedDist2 = #(coords2 - pedCoords2)
             if getRobbed <= Config.RobberyChance then
                 TriggerServerEvent('qb-drugs:server:robCornerDrugs', availableDrugs[drugType].item, bagAmount)
                 QBCore.Functions.Notify(Lang:t("info.has_been_robbed", {bags = bagAmount, drugType = availableDrugs[drugType].label}))
@@ -206,7 +203,7 @@ local function SellToPed(ped)
                 RobberyPed()
                 break
             else
-                if pedDist < 1.5 and cornerselling then
+                if pedDist2 < 1.5 and cornerselling then
                     if Config.UseTarget and not zoneMade then
                         zoneMade = true
                         exports['qb-target']:AddEntityZone('sellingPed', ped, {
@@ -291,7 +288,7 @@ local function SellToPed(ped)
                         end
                     end
                     hasTarget = false
-                    pedDist = 5
+                    pedDist2 = 5
                     SetPedKeepTask(ped, false)
                     SetEntityAsNoLongerNeeded(ped)
                     ClearPedTasksImmediately(ped)

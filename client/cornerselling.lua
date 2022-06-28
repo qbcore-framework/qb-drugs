@@ -260,6 +260,7 @@ local function SellToPed(ped)
                             SetEntityAsNoLongerNeeded(ped)
                             ClearPedTasksImmediately(ped)
                             lastPed[#lastPed + 1] = ped
+                            PoliceCall()
                             break
                         end
                         if IsControlJustPressed(0, 47) then

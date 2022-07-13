@@ -101,7 +101,7 @@ Config.Products = {
 Config.SuccessChance = 50
 Config.ScamChance = 25
 Config.RobberyChance = 25
-Config.MinimumDrugSalePolice = 0
+Config.MinimumDrugSalePolice = GetConvarInt("drug_minimum_sale_police") or 0
 
 Config.CornerSellingDrugsList = {
     "weed_white-widow",

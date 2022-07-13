@@ -246,7 +246,7 @@ function InitZones()
                 heading = v.heading,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
-                debugPoly = true,
+                debugPoly = false,
             }, {
                 options = {
                     {
@@ -369,7 +369,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
             heading = 0,
             minZ = activeDelivery["coords"].z - 1,
             maxZ = activeDelivery["coords"].z + 1,
-            debugPoly = true
+            debugPoly = false
         }, {
             options = {
                 {
@@ -392,7 +392,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
         drugDeliveryZone = BoxZone:Create(vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
             heading = 0,
             name="drugDelivery",
-            debugPoly = true,
+            debugPoly = false,
             minZ = activeDelivery["coords"].z - 1,
             maxZ = activeDelivery["coords"].z + 1,
         })

@@ -50,7 +50,7 @@ local function RobberyPed()
                         TaskPlayAnim(player, "pickup_object", "pickup_low", 8.0, -8.0, -1, 1, 0, false, false, false)
                         Wait(2000)
                         ClearPedTasks(player)
-                        TriggerServerEvent("QBCore:Server:AddItem", stealData.item, stealData.amount)
+                        TriggerServerEvent('qb-drugs:server:giveStealItems', stealData.drugType, stealData.amount)
                         TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
                         stealingPed = nil
                         stealData = {}
@@ -102,7 +102,7 @@ local function RobberyPed()
                             TaskPlayAnim(playerPed, "pickup_object", "pickup_low", 8.0, -8.0, -1, 1, 0, false, false, false)
                             Wait(2000)
                             ClearPedTasks(playerPed)
-                            TriggerServerEvent("QBCore:Server:AddItem", stealData.item, stealData.amount)
+                            TriggerServerEvent('qb-drugs:server:giveStealItems', stealData.drugType, stealData.amount)
                             TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
                             stealingPed = nil
                             stealData = {}
@@ -184,11 +184,12 @@ local function SellToPed(ped)
             local pedCoords2 = GetEntityCoords(ped)
             local pedDist2 = #(coords2 - pedCoords2)
             if getRobbed <= Config.RobberyChance then
-                TriggerServerEvent('qb-drugs:server:robCornerDrugs', availableDrugs[drugType].item, bagAmount)
+                TriggerServerEvent('qb-drugs:server:robCornerDrugs', drugType, bagAmount)
                 QBCore.Functions.Notify(Lang:t("info.has_been_robbed", {bags = bagAmount, drugType = availableDrugs[drugType].label}))
                 stealingPed = ped
                 stealData = {
                     item = availableDrugs[drugType].item,
+                    drugType = drugType,
                     amount = bagAmount,
                 }
                 hasTarget = false
@@ -212,7 +213,7 @@ local function SellToPed(ped)
                                     icon = 'fas fa-hand-holding-dollar',
                                     label = Lang:t("info.target_drug_offer", {bags = bagAmount, drugLabel = currentOfferDrug.label, randomPrice = randomPrice}),
                                     action = function(entity)
-                                        TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
+                                        TriggerServerEvent('qb-drugs:server:sellCornerDrugs', drugType, bagAmount, randomPrice)
                                         hasTarget = false
                                         LoadAnimDict("gestures@f@standing@casual")
                                         TaskPlayAnim(PlayerPedId(), "gestures@f@standing@casual", "gesture_point", 3.0, 3.0, -1, 49, 0, 0, 0, 0)
@@ -250,7 +251,7 @@ local function SellToPed(ped)
                         if IsControlJustPressed(0, 38) then
                             exports['qb-core']:KeyPressed()
                             textDrawn = false
-                            TriggerServerEvent('qb-drugs:server:sellCornerDrugs', availableDrugs[drugType].item, bagAmount, randomPrice)
+                            TriggerServerEvent('qb-drugs:server:sellCornerDrugs', drugType, bagAmount, randomPrice)
                             hasTarget = false
                             LoadAnimDict("gestures@f@standing@casual")
                             TaskPlayAnim(PlayerPedId(), "gestures@f@standing@casual", "gesture_point", 3.0, 3.0, -1, 49, 0, 0, 0, 0)

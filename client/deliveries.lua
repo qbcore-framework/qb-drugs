@@ -136,7 +136,8 @@ local function RequestDelivery()
             ["locationLabel"] = Config.DeliveryLocations[location]["label"],
             ["amount"] = amount,
             ["dealer"] = currentDealer,
-            ["itemData"] = Config.DeliveryItems[item]
+            ["itemData"] = Config.DeliveryItems[item],
+            ["item"] = item
         }
         QBCore.Functions.Notify(Lang:t("info.sending_delivery_email"), 'success')
         TriggerServerEvent('qb-drugs:server:giveDeliveryItems', waitingDelivery)

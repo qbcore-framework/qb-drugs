@@ -47,7 +47,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
 
     if not Player then return end
 
-    local item = Config.DeliveryItems[deliveryData.item]
+    local item = Config.DeliveryItems[deliveryData.item].item
     local itemAmount = deliveryData.amount
     local payout = deliveryData.itemData.payout * itemAmount
     local copsOnline = QBCore.Functions.GetDutyCount('police')

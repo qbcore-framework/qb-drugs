@@ -33,7 +33,7 @@ RegisterNetEvent('qb-drugs:server:giveDeliveryItems', function(deliveryData)
 
     if not Player then return end
 
-    local item = Config.DeliveryItems[deliveryData.item]
+    local item = Config.DeliveryItems[deliveryData.item].item
 
     if not item then return end
 

@@ -235,7 +235,8 @@ local function SellToPed(ped)
                                                 lastPed[#lastPed + 1] = entity
                                                 exports['qb-target']:RemoveZone('sellingPed')
                                                 PoliceCall()
-                                            end   
+                                            end
+					end)
                                     end,
                                 },
                                 {

@@ -14,6 +14,7 @@ local Translations = {
         dealer_not_exists = "This dealer doesn't exist",
         no_dealers = "No dealers have been placed",
         dealer_not_exists_command = "Dealer %{dealerName} doesn't exist"
+        in_vehicle = "Can't sell while in a vehicle"
     },
     success = {
         helped_player = "You helped a person up",
@@ -72,6 +73,7 @@ local Translations = {
         dealergoto_command_help1_help = "Dealer name",
         list_dealers_title = "List of all dealers: ",
         list_dealers_name_prefix = "Name: "
+        selling_to_ped = "Selling drugs..."
     }
 }
 

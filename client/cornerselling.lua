@@ -378,13 +378,17 @@ end
 RegisterNetEvent('qb-drugs:client:cornerselling', function()
     QBCore.Functions.TriggerCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(result)
         if CurrentCops >= Config.MinimumDrugSalePolice then
-            if result then
-                availableDrugs = result
-                ToggleSelling()
-            else
-                QBCore.Functions.Notify(Lang:t("error.has_no_drugs"), 'error')
-                LocalPlayer.state:set("inv_busy", false, true)
-            end
+	    if IsPedInAnyVehicle(PlayerPedId(), false) then
+	        QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
+	    else
+                if result then
+                    availableDrugs = result
+                    ToggleSelling()
+                else
+                    QBCore.Functions.Notify(Lang:t("error.has_no_drugs"), 'error')
+                    LocalPlayer.state:set("inv_busy", false, true)
+                end
+	    end
         else
             QBCore.Functions.Notify(Lang:t("error.not_enough_police", {polices = Config.MinimumDrugSalePolice}), "error")
         end

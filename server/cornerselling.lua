@@ -4,7 +4,7 @@ local function getAvailableDrugs(source)
 
     if not Player then return nil end
 
-    for k, v in pairs(Config.DrugsPrice) do
+    for k,_ in pairs(Config.DrugsPrice) do
         local item = Player.Functions.GetItemByName(k)
 
         if item then

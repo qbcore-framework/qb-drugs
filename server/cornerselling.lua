@@ -4,8 +4,8 @@ local function getAvailableDrugs(source)
 
     if not Player then return nil end
 
-    for i = 1, #Config.CornerSellingDrugsList do
-        local item = Player.Functions.GetItemByName(Config.CornerSellingDrugsList[i])
+    for k in pairs(Config.DrugsPrice) do
+        local item = Player.Functions.GetItemByName(k)
 
         if item then
             AvailableDrugs[#AvailableDrugs + 1] = {

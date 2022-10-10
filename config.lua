@@ -103,18 +103,6 @@ Config.ScamChance = 25
 Config.RobberyChance = 25
 Config.MinimumDrugSalePolice = 0
 
-Config.CornerSellingDrugsList = {
-    "weed_white-widow",
-    "weed_skunk",
-    "weed_purple-haze",
-    "weed_og-kush",
-    "weed_amnesia",
-    "weed_ak47",
-    "crack_baggy",
-    "cokebaggy",
-    "meth"
-}
-
 Config.DrugsPrice = {
     ["weed_white-widow"] = {
         min = 15,

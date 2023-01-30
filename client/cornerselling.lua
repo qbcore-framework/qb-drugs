@@ -26,7 +26,6 @@ local function TooFarAway()
 end
 
 RegisterNetEvent('qb-drugs:client:notifyPolice', function(source)
-    local src = source
     if math.random(1, 100) <= Config.PoliceCallChance then
         TriggerServerEvent('police:server:policeAlert', 'Drug sale in progress')
     end

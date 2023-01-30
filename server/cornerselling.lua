@@ -47,7 +47,7 @@ RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(drugType, amount, p
         Player.Functions.AddMoney('cash', price, "sold-cornerdrugs")
         TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], "remove")
         TriggerClientEvent('qb-drugs:client:refreshAvailableDrugs', src, getAvailableDrugs(src))
-        TriggerClientEvent('qb-drugs:client:notifyPolice', src)   
+        TriggerClientEvent('qb-drugs:client:notifyPolice', src)
     else
         TriggerClientEvent('qb-drugs:client:cornerselling', src)
     end

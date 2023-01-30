@@ -25,11 +25,12 @@ local function TooFarAway()
     availableDrugs = {}
 end
 
-local function PoliceCall()
-    if Config.PoliceCallChance <= math.random(1, 100) then
+RegisterNetEvent('qb-drugs:client:notifyPolice', function(source)
+    local src = source
+    if math.random(1, 100) <= Config.PoliceCallChance then
         TriggerServerEvent('police:server:policeAlert', 'Drug sale in progress')
     end
-end
+end)
 
 local function RobberyPed()
     if Config.UseTarget then
@@ -240,7 +241,6 @@ local function SellToPed(ped)
                                                 ClearPedTasksImmediately(entity)
                                                 lastPed[#lastPed + 1] = entity
                                                 exports['qb-target']:RemoveZone('sellingPed')
-                                                PoliceCall()
                                             end)
 					end
                                     end,

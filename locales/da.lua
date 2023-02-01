@@ -13,7 +13,8 @@ local Translations = {
         dealer_already_exists = "En dealer er allerede navngivet med det navn",
         dealer_not_exists = "Denne dealer eksistere ikke",
         no_dealers = "Ingen dealer er blevet placeret",
-        dealer_not_exists_command = "Dealeren %{dealerName}, eksistere ikke"
+        dealer_not_exists_command = "Dealeren %{dealerName}, eksistere ikke",
+        in_vehicle = "Kan ikke sælge i et køretøj"
     },
     success = {
         helped_player = "Du hjalp en person på benene igen",
@@ -65,7 +66,8 @@ local Translations = {
         dealergoto_command_help1_name = "navn",
         dealergoto_command_help1_help = "Dealer navn",
         list_dealers_title = "Liste over alle dealers: ",
-        list_dealers_name_prefix = "Navn: "
+        list_dealers_name_prefix = "Navn: ",
+        selling_to_ped = "Sælger stoffer..."
     }
 }
 

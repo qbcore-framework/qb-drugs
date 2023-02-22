@@ -5,7 +5,6 @@ local waitingDelivery = nil
 local activeDelivery = nil
 local deliveryTimeout = 0
 local waitingKeyPress = false
-local dealerCombo
 local drugDeliveryZone
 
 -- Handlers

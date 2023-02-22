@@ -318,8 +318,9 @@ function InitZones()
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
             })
-            dealerCombo = ComboZone:Create(dealerPoly, {name = "dealerPoly"})
         end
+        local dealerCombo = ComboZone:Create(dealerPoly, {name = "dealerPoly"})
+        if not dealerCombo then return end
         dealerCombo:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 if not dealerIsHome then

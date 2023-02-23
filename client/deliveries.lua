@@ -5,7 +5,7 @@ local waitingDelivery = nil
 local activeDelivery = nil
 local deliveryTimeout = 0
 local waitingKeyPress = false
-local dealerCombo
+local dealerCombo = nil
 local drugDeliveryZone
 
 -- Handlers
@@ -318,8 +318,9 @@ function InitZones()
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
             })
-            dealerCombo = ComboZone:Create(dealerPoly, {name = "dealerPoly"})
         end
+        dealerCombo = ComboZone:Create(dealerPoly, {name = "dealerPoly"})
+        if not dealerCombo then return end
         dealerCombo:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 if not dealerIsHome then

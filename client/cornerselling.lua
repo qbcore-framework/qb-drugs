@@ -214,21 +214,21 @@ local function SellToPed(ped)
                                     label = Lang:t("info.target_drug_offer", {bags = bagAmount, drugLabel = currentOfferDrug.label, randomPrice = randomPrice}),
                                     action = function(entity)
                                         if IsPedInAnyVehicle(PlayerPedId(), false) then
-					    QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
-					    hasTarget = false
+                                            QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
+                                            hasTarget = false
                                             SetPedKeepTask(entity, false)
                                             SetEntityAsNoLongerNeeded(entity)
                                             ClearPedTasksImmediately(entity)
                                             lastPed[#lastPed + 1] = entity
                                             exports['qb-target']:RemoveZone('sellingPed')
-					    return
-					else
+                                            return
+                                        else
                                             QBCore.Functions.Progressbar("cornerSelling", Lang:t("info.selling_to_ped"), '5000', false, false, {
-					    disableMovement = true,
-				            disableCarMovement = true,
-					    disableMouse = false,
-					    disableCombat = false,
-					    }, {}, {}, {}, function()
+                                                disableMovement = true,
+                                                disableCarMovement = true,
+                                                disableMouse = false,
+                                                disableCombat = false,
+                                            }, {}, {}, {}, function()
                                                 TriggerServerEvent('qb-drugs:server:sellCornerDrugs', drugType, bagAmount, randomPrice)
                                                 hasTarget = false
                                                 LoadAnimDict("gestures@f@standing@casual")
@@ -242,7 +242,7 @@ local function SellToPed(ped)
                                                 exports['qb-target']:RemoveZone('sellingPed')
                                                 PoliceCall()
                                             end)
-					end
+                                        end
                                     end,
                                 },
                                 {
@@ -267,37 +267,37 @@ local function SellToPed(ped)
                             exports['qb-core']:DrawText(Lang:t("info.drug_offer", {bags = bagAmount, drugLabel = currentOfferDrug.label, randomPrice = randomPrice}))
                         end
                         if IsControlJustPressed(0, 38) then
-			    if IsPedInAnyVehicle(PlayerPedId(), false) then
-			        QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
-				exports['qb-core']:KeyPressed()
-				textDrawn = false
-				hasTarget = false
+                            if IsPedInAnyVehicle(PlayerPedId(), false) then
+                                QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
+                                exports['qb-core']:KeyPressed()
+                                textDrawn = false
+                                hasTarget = false
                                 SetPedKeepTask(ped, false)
                                 SetEntityAsNoLongerNeeded(ped)
                                 ClearPedTasksImmediately(ped)
                                 lastPed[#lastPed + 1] = ped
                                 break
-			    else
-				exports['qb-core']:KeyPressed()
-				textDrawn = false
-				QBCore.Functions.Progressbar("cornerSelling", Lang:t("info.selling_to_ped"), '5000', false, false, {
-				disableMovement = true,
-				disableCarMovement = true,
-				disableMouse = false,
-				disableCombat = false,
-				}, {}, {}, {}, function()
-				    TriggerServerEvent('qb-drugs:server:sellCornerDrugs', drugType, bagAmount, randomPrice)
-				    hasTarget = false
-				    LoadAnimDict("gestures@f@standing@casual")
-				    TaskPlayAnim(PlayerPedId(), "gestures@f@standing@casual", "gesture_point", 3.0, 3.0, -1, 49, 0, 0, 0, 0)
-				    Wait(650)
-				    ClearPedTasks(PlayerPedId())
-				    SetPedKeepTask(ped, false)
-				    SetEntityAsNoLongerNeeded(ped)
-				    ClearPedTasksImmediately(ped)
-				    lastPed[#lastPed + 1] = ped
-				end)
-			    end
+                            else
+                                exports['qb-core']:KeyPressed()
+                                textDrawn = false
+                                QBCore.Functions.Progressbar("cornerSelling", Lang:t("info.selling_to_ped"), '5000', false, false, {
+                                    disableMovement = true,
+                                    disableCarMovement = true,
+                                    disableMouse = false,
+                                    disableCombat = false,
+                                }, {}, {}, {}, function()
+                                    TriggerServerEvent('qb-drugs:server:sellCornerDrugs', drugType, bagAmount, randomPrice)
+                                    hasTarget = false
+                                    LoadAnimDict("gestures@f@standing@casual")
+                                    TaskPlayAnim(PlayerPedId(), "gestures@f@standing@casual", "gesture_point", 3.0, 3.0, -1, 49, 0, 0, 0, 0)
+                                    Wait(650)
+                                    ClearPedTasks(PlayerPedId())
+                                    SetPedKeepTask(ped, false)
+                                    SetEntityAsNoLongerNeeded(ped)
+                                    ClearPedTasksImmediately(ped)
+                                    lastPed[#lastPed + 1] = ped
+                                end)
+                            end
                         end
                         if IsControlJustPressed(0, 47) then
                             exports['qb-core']:KeyPressed()
@@ -378,9 +378,9 @@ end
 RegisterNetEvent('qb-drugs:client:cornerselling', function()
     QBCore.Functions.TriggerCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(result)
         if CurrentCops >= Config.MinimumDrugSalePolice then
-	    if IsPedInAnyVehicle(PlayerPedId(), false) then
-	        QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
-	    else
+            if IsPedInAnyVehicle(PlayerPedId(), false) then
+                QBCore.Functions.Notify(Lang:t("error.in_vehicle"), 'error')
+            else
                 if result then
                     availableDrugs = result
                     ToggleSelling()
@@ -388,7 +388,7 @@ RegisterNetEvent('qb-drugs:client:cornerselling', function()
                     QBCore.Functions.Notify(Lang:t("error.has_no_drugs"), 'error')
                     LocalPlayer.state:set("inv_busy", false, true)
                 end
-	    end
+            end
         else
             QBCore.Functions.Notify(Lang:t("error.not_enough_police", {polices = Config.MinimumDrugSalePolice}), "error")
         end
@@ -401,7 +401,7 @@ end)
 
 RegisterNetEvent('qb-drugs:client:refreshAvailableDrugs', function(items)
     availableDrugs = items
-    if #availableDrugs <= 0 then
+    if availableDrugs == nil or #availableDrugs <= 0 then
         QBCore.Functions.Notify(Lang:t("error.no_drugs_left"), 'error')
         cornerselling = false
         LocalPlayer.state:set("inv_busy", false, true)

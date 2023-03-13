@@ -1,4 +1,5 @@
 QBCore = exports['qb-core']:GetCoreObject()
+local copsOnline = 0
 
 -- Functions
 exports('GetDealers', function()
@@ -11,6 +12,10 @@ QBCore.Functions.CreateCallback('qb-drugs:server:RequestConfig', function(_, cb)
 end)
 
 -- Events
+RegisterNetEvent('police:SetCopCount', function(amount)
+    copsOnline = amount
+end)
+
 RegisterNetEvent('qb-drugs:server:updateDealerItems', function(itemData, amount, dealer)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -50,7 +55,6 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
     local item = Config.DeliveryItems[deliveryData.item].item
     local itemAmount = deliveryData.amount
     local payout = deliveryData.itemData.payout * itemAmount
-    local copsOnline = QBCore.Functions.GetDutyCount('police')
     local curRep = Player.PlayerData.metadata["dealerrep"]
     local invItem = Player.Functions.GetItemByName(item)
     if inTime then

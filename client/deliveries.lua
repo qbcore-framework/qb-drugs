@@ -240,6 +240,8 @@ function AwaitingInput()
 end
 
 function InitZones()
+    if #Config.Dealers == 0 then return end
+
     if Config.UseTarget then
         for k,v in pairs(Config.Dealers) do
             exports["qb-target"]:AddBoxZone("dealer_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {

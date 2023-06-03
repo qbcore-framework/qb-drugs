@@ -23,12 +23,11 @@ QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs
 end)
 
 RegisterNetEvent('qb-drugs:server:giveStealItems', function(drugType, amount)
-    local availableDrugs = getAvailableDrugs(source)
     local Player = QBCore.Functions.GetPlayer(source)
 
-    if not availableDrugs or not Player then return end
+    if not Player then return end
 
-    Player.Functions.AddItem(availableDrugs[drugType].item, amount)
+    Player.Functions.AddItem(drugType, amount)
 end)
 
 RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(drugType, amount, price)

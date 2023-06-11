@@ -1,3 +1,5 @@
+local StolenDrugs = {}
+
 local function getAvailableDrugs(source)
     local AvailableDrugs = {}
     local Player = QBCore.Functions.GetPlayer(source)
@@ -25,9 +27,14 @@ end)
 RegisterNetEvent('qb-drugs:server:giveStealItems', function(drugType, amount)
     local Player = QBCore.Functions.GetPlayer(source)
 
-    if not Player then return end
+    if not Player or StolenDrugs == {} then return end
 
-    Player.Functions.AddItem(drugType, amount)
+    for k,v in pairs(StolenDrugs) do
+        if drugType == v.item and amount == v.amount then
+            Player.Functions.AddItem(drugType, amount)
+            table.remove(StolenDrugs, k)
+        end
+    end 
 end)
 
 RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(drugType, amount, price)
@@ -61,6 +68,7 @@ RegisterNetEvent('qb-drugs:server:robCornerDrugs', function(drugType, amount)
     local item = availableDrugs[drugType].item
 
     Player.Functions.RemoveItem(item, amount)
+    table.insert(StolenDrugs, {item = item, amount = amount})
     TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], "remove")
     TriggerClientEvent('qb-drugs:client:refreshAvailableDrugs', src, getAvailableDrugs(src))
 end)

@@ -50,7 +50,7 @@ local function RobberyPed()
                         TaskPlayAnim(player, "pickup_object", "pickup_low", 8.0, -8.0, -1, 1, 0, false, false, false)
                         Wait(2000)
                         ClearPedTasks(player)
-                        TriggerServerEvent('qb-drugs:server:giveStealItems', stealData.drugType, stealData.amount)
+                        TriggerServerEvent('qb-drugs:server:giveStealItems', stealData.item, stealData.amount)
                         TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
                         stealingPed = nil
                         stealData = {}
@@ -102,7 +102,7 @@ local function RobberyPed()
                             TaskPlayAnim(playerPed, "pickup_object", "pickup_low", 8.0, -8.0, -1, 1, 0, false, false, false)
                             Wait(2000)
                             ClearPedTasks(playerPed)
-                            TriggerServerEvent('qb-drugs:server:giveStealItems', stealData.drugType, stealData.amount)
+                            TriggerServerEvent('qb-drugs:server:giveStealItems', stealData.item, stealData.amount)
                             TriggerEvent('inventory:client:ItemBox', QBCore.Shared.Items[stealData.item], "add")
                             stealingPed = nil
                             stealData = {}

@@ -1,7 +1,7 @@
 local Translations = {
     error = {
         has_no_drugs = "Du har ingen stoffer på dig",
-        not_enough_police = "Der er ikke nok betjente på arbejde (%{polices} required)",
+        not_enough_police = "Der er ikke nok betjente på arbejde (%{polices} påkrævet)",
         no_drugs_left = "Ingen stoffer at sælge",
         too_far_away = "Du gik for langt væk",
         offer_declined = "Tilbud blev afslået",

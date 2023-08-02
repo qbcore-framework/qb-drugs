@@ -44,7 +44,6 @@ local Translations = {
         other_dealers_button = "[E] Buy / [G] Start a mission",
         reviving_player = "Helping person back up...",
         dealer_name = "Dealer %{dealerName}",
-        delivery_search = "Currently searching for a delivery...",
         sending_delivery_email = "These are the products, I'll keep in touch through email",
         mystery_man_knock_message = "Hello my child, what can I do for you?",
         treated_fred_bad = "Unfortunately I don't do business anymore ... You should have treated me better",
@@ -75,7 +74,8 @@ local Translations = {
         dealergoto_command_help1_help = "Dealer name",
         list_dealers_title = "List of all dealers: ",
         list_dealers_name_prefix = "Name: ",
-        selling_to_ped = "Selling drugs..."
+        selling_to_ped = "Selling drugs...",
+        delivery_search = "Currently searching for a delivery...",
     }
 }
 

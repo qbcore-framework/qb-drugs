@@ -13,7 +13,8 @@ local Translations = {
         dealer_already_exists = "Esiste già uno spacciatore con questo nome",
         dealer_not_exists = "Questo spacciatore non esiste",
         no_dealers = "Nessuno spacciatore è stato impostato",
-        dealer_not_exists_command = "Lo spacciatore %{dealerName} non esiste"
+        dealer_not_exists_command = "Lo spacciatore %{dealerName} non esiste",
+        delivery_fail = "",
     },
     success = {
         helped_player = "Hai aiutato una persona",
@@ -65,7 +66,8 @@ local Translations = {
         dealergoto_command_help1_name = "nome",
         dealergoto_command_help1_help = "Nome dello spacciatore",
         list_dealers_title = "Lista degli spacciatori: ",
-        list_dealers_name_prefix = "Nome: "
+        list_dealers_name_prefix = "Nome: ",
+        delivery_search = "",
     }
 }
 

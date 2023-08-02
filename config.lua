@@ -1,10 +1,10 @@
 Config = Config or {}
-Config.Debug = true -- true / false - Currently prints the vector3 and label of locations when requesting a delivery
+Config.Debug = false -- true / false - Currently prints the vector3 and label of locations when requesting a delivery
 Config.NearbyDeliveries = true -- true / false - Do you want deliveries to be within a certain amount of units?
 Config.DeliveryWithin = 2000 -- int (Default 2000) - How many units do you want the delivery location to be within from the player when making a delivery request?
 Config.Dealers = {}
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true'
-Config.PoliceCallChance = 10
+Config.PoliceCallChance = 15
 
 -- Shop Config
 Config.Products = {

@@ -14,7 +14,8 @@ local Translations = {
         dealer_not_exists = "This dealer doesn't exist",
         no_dealers = "No dealers have been placed",
         dealer_not_exists_command = "Dealer %{dealerName} doesn't exist",
-        in_vehicle = "Can't sell while in a vehicle"
+        in_vehicle = "Can't sell while in a vehicle",
+        delivery_fail = "I couldn't find a delivery for you right now. Sorry about that!",
     },
     success = {
         helped_player = "You helped a person up",
@@ -43,6 +44,7 @@ local Translations = {
         other_dealers_button = "[E] Buy / [G] Start a mission",
         reviving_player = "Helping person back up...",
         dealer_name = "Dealer %{dealerName}",
+        delivery_search = "Currently searching for a delivery...",
         sending_delivery_email = "These are the products, I'll keep in touch through email",
         mystery_man_knock_message = "Hello my child, what can I do for you?",
         treated_fred_bad = "Unfortunately I don't do business anymore ... You should have treated me better",

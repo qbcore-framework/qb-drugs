@@ -240,7 +240,7 @@ function AwaitingInput()
 end
 
 function InitZones()
-    if #Config.Dealers == 0 then return end
+    if next(Config.Dealers) == nil then return end
 
     if Config.UseTarget then
         for k,v in pairs(Config.Dealers) do

@@ -131,6 +131,8 @@ local function RequestDelivery()
         
         local amount = math.random(1, 3)
         local item = RandomDeliveryItemOnRep()
+        local deliveryCoords = nil
+        local deliveryLabel = nil
 
         QBCore.Functions.Notify(Lang:t("info.delivery_search"), 'success')
         if Config.NearbyDeliveries == true then

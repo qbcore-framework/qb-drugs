@@ -136,8 +136,6 @@ local function RequestDelivery()
         if Config.NearbyDeliveries == true then
             local playerPed = PlayerPedId()
             local playerCoords = GetEntityCoords(playerPed)
-            local deliveryCoords = nil
-            local deliveryLabel = nil
             local nearbyLocations = {}
         -- Filter out the nearby locations
             for _, location in ipairs(Config.DeliveryLocations) do
@@ -210,7 +208,7 @@ end
 local function DeliveryTimer()
     CreateThread(function()
         while deliveryTimeout - 1 > 0 do
-            deliveryTimeout -= 1
+            deliveryTimeout = deliveryTimeout - 1
             Wait(1000)
         end
         deliveryTimeout = 0
@@ -290,7 +288,6 @@ end
 
 function InitZones()
     if next(Config.Dealers) == nil then return end
-    
     if Config.UseTarget then
         for k,v in pairs(Config.Dealers) do
             exports["qb-target"]:AddBoxZone("dealer_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {

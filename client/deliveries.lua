@@ -131,8 +131,6 @@ local function RequestDelivery()
         
         local amount = math.random(1, 3)
         local item = RandomDeliveryItemOnRep()
-        local deliveryCoords = nil
-        local deliveryLabel = nil
 
         QBCore.Functions.Notify(Lang:t("info.delivery_search"), 'success')
         if Config.NearbyDeliveries == true then
@@ -150,19 +148,17 @@ local function RequestDelivery()
             -- Select a random location from the nearby locations
             if #nearbyLocations > 0 then
                 local selectedLocation = nearbyLocations[math.random(1, #nearbyLocations)]
-                deliveryCoords = selectedLocation.coords
-                deliveryLabel = selectedLocation.label
                 waitingDelivery = {
-                    ["coords"] = deliveryCoords,
-                    ["locationLabel"] = deliveryLabel,
+                    ["coords"] = selectedLocation.coords,
+                    ["locationLabel"] = selectedLocation.label,
                     ["amount"] = amount,
                     ["dealer"] = currentDealer,
                     ["itemData"] = Config.DeliveryItems[item],
                     ["item"] = item
                 }
                 if Config.Debug == true then
-                    print(deliveryCoords)
-                    print(deliveryLabel)
+                    print(selectedLocation.coords)
+                    print(selectedLocation.label)
                 end
             else
                 QBCore.Functions.Notify(Lang:t("error.delivery_fail"), 'error')

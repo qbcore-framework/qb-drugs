@@ -128,17 +128,62 @@ end
 local function RequestDelivery()
     if not waitingDelivery then
         GetClosestDealer()
-        local location = math.random(1, #Config.DeliveryLocations)
+        
         local amount = math.random(1, 3)
         local item = RandomDeliveryItemOnRep()
-        waitingDelivery = {
-            ["coords"] = Config.DeliveryLocations[location]["coords"],
-            ["locationLabel"] = Config.DeliveryLocations[location]["label"],
-            ["amount"] = amount,
-            ["dealer"] = currentDealer,
-            ["itemData"] = Config.DeliveryItems[item],
-            ["item"] = item
-        }
+
+        QBCore.Functions.Notify(Lang:t("info.delivery_search"), 'success')
+        if Config.NearbyDeliveries == true then
+            local playerPed = PlayerPedId()
+            local playerCoords = GetEntityCoords(playerPed)
+            local nearbyLocations = {}
+        -- Filter out the nearby locations
+            for _, location in ipairs(Config.DeliveryLocations) do
+                local distance = #(playerCoords - location.coords)
+                if distance <= Config.DeliveryWithin then
+                    nearbyLocations[#nearbyLocations + 1] = location
+                end
+            end
+
+            -- Select a random location from the nearby locations
+            if #nearbyLocations > 0 then
+                local selectedLocation = nearbyLocations[math.random(1, #nearbyLocations)]
+                waitingDelivery = {
+                    ["coords"] = selectedLocation.coords,
+                    ["locationLabel"] = selectedLocation.label,
+                    ["amount"] = amount,
+                    ["dealer"] = currentDealer,
+                    ["itemData"] = Config.DeliveryItems[item],
+                    ["item"] = item
+                }
+                if Config.Debug == true then
+                    print(selectedLocation.coords)
+                    print(selectedLocation.label)
+                end
+            else
+                QBCore.Functions.Notify(Lang:t("error.delivery_fail"), 'error')
+                if Config.Debug == true then
+                    print("No suitable delivery location found within 2000 units.")
+                end
+                return
+            end
+        else
+            local location = math.random(1, #Config.DeliveryLocations)
+
+            waitingDelivery = {
+                ["coords"] = Config.DeliveryLocations[location]["coords"],
+                ["locationLabel"] = Config.DeliveryLocations[location]["label"],
+                ["amount"] = amount,
+                ["dealer"] = currentDealer,
+                ["itemData"] = Config.DeliveryItems[item],
+                ["item"] = item
+            }
+            if Config.Debug == true then
+                print(Config.DeliveryLocations[location]["coords"])
+                print(Config.DeliveryLocations[location]["label"])
+            end
+        end
+
         QBCore.Functions.Notify(Lang:t("info.sending_delivery_email"), 'success')
         TriggerServerEvent('qb-drugs:server:giveDeliveryItems', waitingDelivery)
         SetTimeout(2000, function()
@@ -161,7 +206,7 @@ end
 local function DeliveryTimer()
     CreateThread(function()
         while deliveryTimeout - 1 > 0 do
-            deliveryTimeout -= 1
+            deliveryTimeout = deliveryTimeout - 1
             Wait(1000)
         end
         deliveryTimeout = 0
@@ -241,7 +286,6 @@ end
 
 function InitZones()
     if next(Config.Dealers) == nil then return end
-
     if Config.UseTarget then
         for k,v in pairs(Config.Dealers) do
             exports["qb-target"]:AddBoxZone("dealer_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
@@ -366,7 +410,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
     activeDelivery = locationData
     deliveryTimeout = 300
     DeliveryTimer()
-    SetMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
+    SetMapBlip(activeDelivery["coords"].x, activeDelivery["coords"].y)
     if Config.UseTarget then
         exports["qb-target"]:AddBoxZone('drugDeliveryZone', vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
             name = 'drugDeliveryZone',

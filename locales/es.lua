@@ -13,7 +13,8 @@ local Translations = {
         dealer_already_exists = "Un dealer ya existe con este nombre",
         dealer_not_exists = "Este dealer no existe",
         no_dealers = "No se han colocado dealer",
-        dealer_not_exists_command = "Dealer %{dealerName} no existe"
+        dealer_not_exists_command = "Dealer %{dealerName} no existe",
+        delivery_fail = "",
     },
     success = {
         helped_player = "Ayudaste a una persona",
@@ -71,7 +72,8 @@ local Translations = {
         dealergoto_command_help1_name = "nombre",
         dealergoto_command_help1_help = "Nombre de Dealer",
         list_dealers_title = "Lista de todos los dealer: ",
-        list_dealers_name_prefix = "Nombre: "
+        list_dealers_name_prefix = "Nombre: ",
+        delivery_search = "",
     }
 }
 

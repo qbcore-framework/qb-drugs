@@ -34,7 +34,7 @@ RegisterNetEvent('qb-drugs:server:giveStealItems', function(drugType, amount)
             Player.Functions.AddItem(drugType, amount)
             table.remove(StolenDrugs, k)
         end
-    end 
+    end
 end)
 
 RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(drugType, amount, price)

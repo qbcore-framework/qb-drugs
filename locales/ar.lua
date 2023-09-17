@@ -13,7 +13,8 @@ local Translations = {
         dealer_already_exists = "يوجد تاجر بالفعل بهذا الاسم",
         dealer_not_exists = "هذا التاجر غير موجود",
         no_dealers = "لم يتم وضع تجار",
-        dealer_not_exists_command = "%{dealerName} غير معروف"
+        dealer_not_exists_command = "%{dealerName} غير معروف",
+        delivery_fail = ""
     },
     success = {
         helped_player = "لقد ساعدت الشخص",
@@ -65,7 +66,8 @@ local Translations = {
         dealergoto_command_help1_name = "name",
         dealergoto_command_help1_help = "اسم البائع",
         list_dealers_title = "قائمة البائعين في المدينة: ",
-        list_dealers_name_prefix = "الاسم: "
+        list_dealers_name_prefix = "الاسم: ",
+        delivery_search = ""
     }
 }
 

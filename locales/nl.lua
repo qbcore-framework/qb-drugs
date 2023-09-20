@@ -13,7 +13,8 @@ local Translations = {
         dealer_already_exists = "Er bestaat al een dealer met deze naam",
         dealer_not_exists = "De dealer bestaat niet",
         no_dealers = "Er zijn geen dealers geplaatst",
-        dealer_not_exists_command = "Dealer %{dealerName} bestaat niet"
+        dealer_not_exists_command = "Dealer %{dealerName} bestaat niet",
+        delivery_fail = "",
     },
     success = {
         helped_player = "Je hebt een persoon opgeholpen",
@@ -65,7 +66,8 @@ local Translations = {
         dealergoto_command_help1_name = "naam",
         dealergoto_command_help1_help = "Dealer naam",
         list_dealers_title = "Lijst van alle dealers: ",
-        list_dealers_name_prefix = "Naam: "
+        list_dealers_name_prefix = "Naam: ",
+        delivery_search = "",
     }
 }
 

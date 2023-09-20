@@ -33,10 +33,10 @@ end
 
 local function RobberyPed()
     if Config.UseTarget then
-        exports['qb-target']:AddEntityZone('stealingPed', stealingPed, {
+        exports['qb-target']:AddEntityZone('stealingPed', stealingPed,{
             name = 'stealingPed',
             debugPoly = false,
-        }, {
+        },{
             options = {
                 {
                     icon = 'fas fa-magnifying-glass',

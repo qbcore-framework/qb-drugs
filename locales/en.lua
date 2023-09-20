@@ -14,7 +14,8 @@ local Translations = {
         dealer_not_exists = "This dealer doesn't exist",
         no_dealers = "No dealers have been placed",
         dealer_not_exists_command = "Dealer %{dealerName} doesn't exist",
-        in_vehicle = "Can't sell while in a vehicle"
+        in_vehicle = "Can't sell while in a vehicle",
+        delivery_fail = "I couldn't find a delivery for you right now. Sorry about that!",
     },
     success = {
         helped_player = "You helped a person up",
@@ -73,7 +74,8 @@ local Translations = {
         dealergoto_command_help1_help = "Dealer name",
         list_dealers_title = "List of all dealers: ",
         list_dealers_name_prefix = "Name: ",
-        selling_to_ped = "Selling drugs..."
+        selling_to_ped = "Selling drugs...",
+        delivery_search = "Currently searching for a delivery...",
     }
 }
 

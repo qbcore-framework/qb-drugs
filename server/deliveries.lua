@@ -18,7 +18,7 @@ RegisterNetEvent('qb-drugs:server:updateDealerItems', function(itemData, amount,
     if not Player then return end
 
     if Config.Dealers[dealer]["products"][itemData.slot].amount - 1 >= 0 then
-        Config.Dealers[dealer]["products"][itemData.slot].amount -= amount
+        Config.Dealers[dealer]["products"][itemData.slot].amount = Config.Dealers[dealer]["products"][itemData.slot].amount - amount
         TriggerClientEvent('qb-drugs:client:setDealerItems', -1, itemData, amount, dealer)
     else
         Player.Functions.RemoveItem(itemData.name, amount)

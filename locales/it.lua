@@ -14,7 +14,8 @@ local Translations = {
         dealer_not_exists = "Questo spacciatore non esiste",
         no_dealers = "Nessuno spacciatore è stato impostato",
         dealer_not_exists_command = "Lo spacciatore %{dealerName} non esiste",
-        delivery_fail = "",
+        in_vehicle = "Non puoi vendere da dentro un veicolo",
+        delivery_fail = "Non sono riuscito a trovare una consegna in questo momento. Mi spiace!",
     },
     success = {
         helped_player = "Hai aiutato una persona",
@@ -31,8 +32,14 @@ local Translations = {
         suspicious_situation = "Situazione sospetta",
         possible_drug_dealing = "Possibile traffico di droga",
         drug_offer = "[~g~E~w~] %{bags}x %{drugLabel} per $%{randomPrice}? / [~g~G~w~] Declina l'offerta",
+        target_drug_offer = "Vendi x%{bags} %{drugLabel} a $%{randomPrice}?",
+        search_ped = "Cerca",
         pick_up_button = "[~g~E~w~] Raccogli",
         knock_button = "[~g~E~w~] Bussa",
+        target_knock = 'Bussa alla porta',
+        target_deliver = 'Consegna droga',
+        target_openshop = 'Apri Negozio',
+        target_request = 'Richiedi Consegna',
         mystery_man_button = "[~g~E~w~] Compra / [~g~G~w~] Aiuta il tuo amico ($5000)",
         other_dealers_button = "[~g~E~w~] Compra / [~g~G~w~] Inizia una missione",
         reviving_player = "Aiutando la persona ad alzarsi...",
@@ -67,6 +74,7 @@ local Translations = {
         dealergoto_command_help1_help = "Nome dello spacciatore",
         list_dealers_title = "Lista degli spacciatori: ",
         list_dealers_name_prefix = "Nome: ",
+        selling_to_ped = "Stai vendendo...",
         delivery_search = "",
     }
 }

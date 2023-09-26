@@ -25,8 +25,11 @@ local function TooFarAway()
     availableDrugs = {}
 end
 
+-- Fixed:
+-- swapped the condition to `random <= Config.PoliceCallChance` so "Config.PoliceCallChance", represents the call probability.
 local function PoliceCall()
-    if Config.PoliceCallChance <= math.random(1, 100) then
+    local random = math.random(1, 100)
+    if random <= Config.PoliceCallChance then
         TriggerServerEvent('police:server:policeAlert', 'Drug sale in progress')
     end
 end
@@ -296,6 +299,7 @@ local function SellToPed(ped)
                                     SetEntityAsNoLongerNeeded(ped)
                                     ClearPedTasksImmediately(ped)
                                     lastPed[#lastPed + 1] = ped
+                                    PoliceCall()
                                 end)
                             end
                         end

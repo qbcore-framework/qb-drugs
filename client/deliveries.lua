@@ -213,8 +213,11 @@ local function DeliveryTimer()
     end)
 end
 
+-- Fixed:
+-- swapped the condition to `random <= Config.PoliceCallChance` so "Config.PoliceCallChance", represents the call probability.
 local function PoliceCall()
-    if Config.PoliceCallChance <= math.random(1, 100) then
+    local random = math.random(1, 100)
+    if random <= Config.PoliceCallChance then
         TriggerServerEvent('police:server:policeAlert', 'Suspicous activity')
     end
 end

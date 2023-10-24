@@ -27,7 +27,7 @@ end)
 local function GetClosestDealer()
     local ped = PlayerPedId()
     local pCoords = GetEntityCoords(ped)
-    for k,v in pairs(Config.Dealers) do
+    for k, v in pairs(Config.Dealers) do
         local dealerCoords = vector3(v.coords.x, v.coords.y, v.coords.z)
         if #(pCoords - dealerCoords) < 2 then
             currentDealer = k
@@ -47,7 +47,7 @@ local function OpenDealerShop()
             repItems.items[k] = Config.Dealers[currentDealer]["products"][k]
         end
     end
-    TriggerServerEvent("inventory:server:OpenInventory", "shop", "Dealer_"..Config.Dealers[currentDealer]["name"], repItems)
+    TriggerServerEvent("inventory:server:OpenInventory", "shop", "Dealer_" .. Config.Dealers[currentDealer]["name"], repItems)
 end
 
 local function KnockDoorAnim(home)
@@ -62,17 +62,17 @@ local function KnockDoorAnim(home)
             RequestAnimDict(knockAnimLib)
             Wait(100)
         end
-        TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false )
+        TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(3500)
         TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(1000)
         dealerIsHome = true
         TriggerEvent('chat:addMessage', {
-            color = { 255, 0, 0},
+            color = { 255, 0, 0 },
             multiline = true,
             args = {
-                Lang:t("info.dealer_name", {dealerName = Config.Dealers[currentDealer]["name"]}),
-                Lang:t("info.fred_knock_message", {firstName = myData.charinfo.firstname})
+                Lang:t("info.dealer_name", { dealerName = Config.Dealers[currentDealer]["name"] }),
+                Lang:t("info.fred_knock_message", { firstName = myData.charinfo.firstname })
             }
         })
         exports['qb-core']:DrawText(Lang:t("info.other_dealers_button"), 'left')
@@ -84,7 +84,7 @@ local function KnockDoorAnim(home)
             RequestAnimDict(knockAnimLib)
             Wait(100)
         end
-        TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false )
+        TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(3500)
         TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(1000)
@@ -119,7 +119,7 @@ local function RandomDeliveryItemOnRep()
     local availableItems = {}
     for k, _ in pairs(Config.DeliveryItems) do
         if Config.DeliveryItems[k]["minrep"] <= myRep then
-            availableItems[#availableItems+1] = k
+            availableItems[#availableItems + 1] = k
         end
     end
     return availableItems[math.random(1, #availableItems)]
@@ -128,7 +128,7 @@ end
 local function RequestDelivery()
     if not waitingDelivery then
         GetClosestDealer()
-        
+
         local amount = math.random(1, 3)
         local item = RandomDeliveryItemOnRep()
 
@@ -137,7 +137,7 @@ local function RequestDelivery()
             local playerPed = PlayerPedId()
             local playerCoords = GetEntityCoords(playerPed)
             local nearbyLocations = {}
-        -- Filter out the nearby locations
+            -- Filter out the nearby locations
             for _, location in ipairs(Config.DeliveryLocations) do
                 local distance = #(playerCoords - location.coords)
                 if distance <= Config.DeliveryWithin then
@@ -190,7 +190,7 @@ local function RequestDelivery()
             TriggerServerEvent('qb-phone:server:sendNewMail', {
                 sender = Config.Dealers[currentDealer]["name"],
                 subject = "Delivery Location",
-                message = Lang:t("info.delivery_info_email", {itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"]}),
+                message = Lang:t("info.delivery_info_email", { itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"] }),
                 button = {
                     enabled = true,
                     buttonEvent = "qb-drugs:client:setLocation",
@@ -225,7 +225,7 @@ end
 local function DeliverStuff()
     if deliveryTimeout > 0 then
         Wait(500)
-        TriggerEvent('animations:client:EmoteCommandStart', {"bumbin"})
+        TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
         PoliceCall()
         QBCore.Functions.Progressbar("work_dropbox", Lang:t("info.delivering_products"), 3500, false, true, {
             disableMovement = true,
@@ -290,9 +290,9 @@ end
 function InitZones()
     if next(Config.Dealers) == nil then return end
     if Config.UseTarget then
-        for k,v in pairs(Config.Dealers) do
-            exports["qb-target"]:AddBoxZone("dealer_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
-                name = "dealer_"..k,
+        for k, v in pairs(Config.Dealers) do
+            exports["qb-target"]:AddBoxZone("dealer_" .. k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
+                name = "dealer_" .. k,
                 heading = v.heading,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
@@ -359,21 +359,21 @@ function InitZones()
         end
     else
         local dealerPoly = {}
-        for k,v in pairs(Config.Dealers) do
-            dealerPoly[#dealerPoly+1] = BoxZone:Create(vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
+        for k, v in pairs(Config.Dealers) do
+            dealerPoly[#dealerPoly + 1] = BoxZone:Create(vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
                 heading = -20,
-                name="dealer_"..k,
+                name = "dealer_" .. k,
                 debugPoly = false,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
             })
         end
-        dealerCombo = ComboZone:Create(dealerPoly, {name = "dealerPoly"})
+        dealerCombo = ComboZone:Create(dealerPoly, { name = "dealerPoly" })
         if not dealerCombo then return end
         dealerCombo:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 if not dealerIsHome then
-                    exports['qb-core']:DrawText(Lang:t("info.knock_button"),'left')
+                    exports['qb-core']:DrawText(Lang:t("info.knock_button"), 'left')
                     AwaitingInput()
                 elseif dealerIsHome then
                     exports['qb-core']:DrawText(Lang:t("info.other_dealers_button"), 'left')
@@ -442,7 +442,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
     else
         drugDeliveryZone = BoxZone:Create(vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
             heading = 0,
-            name="drugDelivery",
+            name = "drugDelivery",
             debugPoly = false,
             minZ = activeDelivery["coords"].z - 1,
             maxZ = activeDelivery["coords"].z + 1,
@@ -450,7 +450,7 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
         drugDeliveryZone:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 local inDeliveryZone = true
-                exports['qb-core']:DrawText(Lang:t("info.deliver_items_button", {itemAmount = activeDelivery["amount"], itemLabel = QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"]}),'left')
+                exports['qb-core']:DrawText(Lang:t("info.deliver_items_button", { itemAmount = activeDelivery["amount"], itemLabel = QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"] }), 'left')
                 CreateThread(function()
                     while inDeliveryZone do
                         if IsControlJustPressed(0, 38) then
@@ -475,7 +475,7 @@ RegisterNetEvent('qb-drugs:client:sendDeliveryMail', function(type, deliveryData
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Config.Dealers[deliveryData["dealer"]]["name"],
             subject = "Delivery",
-            message = Lang:t("info.perfect_delivery", {dealerName = Config.Dealers[deliveryData["dealer"]]["name"]})
+            message = Lang:t("info.perfect_delivery", { dealerName = Config.Dealers[deliveryData["dealer"]]["name"] })
         })
     elseif type == 'bad' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {

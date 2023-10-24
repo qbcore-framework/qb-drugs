@@ -226,6 +226,7 @@ local function SellToPed(ped)
                                             exports['qb-target']:RemoveZone('sellingPed')
                                             return
                                         else
+                                            exports['qb-target']:RemoveZone('sellingPed')
                                             QBCore.Functions.Progressbar("cornerSelling", Lang:t("info.selling_to_ped"), '5000', false, false, {
                                                 disableMovement = true,
                                                 disableCarMovement = true,
@@ -242,7 +243,7 @@ local function SellToPed(ped)
                                                 SetEntityAsNoLongerNeeded(entity)
                                                 ClearPedTasksImmediately(entity)
                                                 lastPed[#lastPed + 1] = entity
-                                                exports['qb-target']:RemoveZone('sellingPed')
+                                                --exports['qb-target']:RemoveZone('sellingPed')
                                                 PoliceCall()
                                             end)
                                         end

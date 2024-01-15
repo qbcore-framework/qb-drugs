@@ -13,11 +13,11 @@ local function getAvailableDrugs(source)
             AvailableDrugs[#AvailableDrugs + 1] = {
                 item = item.name,
                 amount = item.amount,
-                label = QBCore.Shared.Items[item.name]["label"]
+                label = QBCore.Shared.Items[item.name]['label']
             }
         end
     end
-    return table.type(AvailableDrugs) ~= "empty" and AvailableDrugs or nil
+    return table.type(AvailableDrugs) ~= 'empty' and AvailableDrugs or nil
 end
 
 QBCore.Functions.CreateCallback('qb-drugs:server:cornerselling:getAvailableDrugs', function(source, cb)
@@ -29,7 +29,7 @@ RegisterNetEvent('qb-drugs:server:giveStealItems', function(drugType, amount)
 
     if not Player or StolenDrugs == {} then return end
 
-    for k,v in pairs(StolenDrugs) do
+    for k, v in pairs(StolenDrugs) do
         if drugType == v.item and amount == v.amount then
             Player.Functions.AddItem(drugType, amount)
             table.remove(StolenDrugs, k)
@@ -48,10 +48,10 @@ RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function(drugType, amount, p
 
     local hasItem = Player.Functions.GetItemByName(item)
     if hasItem.amount >= amount then
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("success.offer_accepted"), 'success')
+        TriggerClientEvent('QBCore:Notify', src, Lang:t('success.offer_accepted'), 'success')
         Player.Functions.RemoveItem(item, amount)
-        Player.Functions.AddMoney('cash', price, "sold-cornerdrugs")
-        TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], "remove")
+        Player.Functions.AddMoney('cash', price, 'sold-cornerdrugs')
+        TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], 'remove')
         TriggerClientEvent('qb-drugs:client:refreshAvailableDrugs', src, getAvailableDrugs(src))
     else
         TriggerClientEvent('qb-drugs:client:cornerselling', src)
@@ -68,7 +68,7 @@ RegisterNetEvent('qb-drugs:server:robCornerDrugs', function(drugType, amount)
     local item = availableDrugs[drugType].item
 
     Player.Functions.RemoveItem(item, amount)
-    table.insert(StolenDrugs, {item = item, amount = amount})
-    TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], "remove")
+    table.insert(StolenDrugs, { item = item, amount = amount })
+    TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[item], 'remove')
     TriggerClientEvent('qb-drugs:client:refreshAvailableDrugs', src, getAvailableDrugs(src))
 end)

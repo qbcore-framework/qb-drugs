@@ -1,17 +1,18 @@
 fx_version 'cerulean'
 game 'gta5'
+lua54 'yes'
+author 'Kakarot'
+description 'Allows players to deliver packages and sell drugs to npcs'
+version '1.3.0'
 
-description 'QB-Drugs'
-version '1.3'
-
-shared_scripts{
+shared_scripts {
     'config.lua',
     '@qb-core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua'
 }
 
-client_scripts{
+client_scripts {
     '@PolyZone/client.lua',
     '@PolyZone/BoxZone.lua',
     '@PolyZone/ComboZone.lua',
@@ -19,10 +20,8 @@ client_scripts{
     'client/cornerselling.lua'
 }
 
-server_scripts{
+server_scripts {
     '@oxmysql/lib/MySQL.lua',
     'server/deliveries.lua',
     'server/cornerselling.lua'
 }
-
-lua54 'yes'

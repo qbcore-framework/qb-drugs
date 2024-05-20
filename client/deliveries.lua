@@ -36,27 +36,13 @@ local function GetClosestDealer()
     end
 end
 
-local function OpenDealerShop()
-    GetClosestDealer()
-    local repItems = {}
-    repItems.label = Config.Dealers[currentDealer]["name"]
-    repItems.items = {}
-    repItems.slots = 30
-    for k, _ in pairs(Config.Dealers[currentDealer]["products"]) do
-        if QBCore.Functions.GetPlayerData().metadata["dealerrep"] >= Config.Dealers[currentDealer]["products"][k].minrep then
-            repItems.items[k] = Config.Dealers[currentDealer]["products"][k]
-        end
-    end
-    TriggerServerEvent("inventory:server:OpenInventory", "shop", "Dealer_" .. Config.Dealers[currentDealer]["name"], repItems)
-end
-
 local function KnockDoorAnim(home)
-    local knockAnimLib = "timetable@jimmy@doorknock@"
-    local knockAnim = "knockdoor_idle"
+    local knockAnimLib = 'timetable@jimmy@doorknock@'
+    local knockAnim = 'knockdoor_idle'
     local PlayerPed = PlayerPedId()
     local myData = QBCore.Functions.GetPlayerData()
     if home then
-        TriggerServerEvent("InteractSound_SV:PlayOnSource", "knock_door", 0.2)
+        TriggerServerEvent('InteractSound_SV:PlayOnSource', 'knock_door', 0.2)
         Wait(100)
         while (not HasAnimDictLoaded(knockAnimLib)) do
             RequestAnimDict(knockAnimLib)
@@ -64,21 +50,21 @@ local function KnockDoorAnim(home)
         end
         TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(3500)
-        TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
+        TaskPlayAnim(PlayerPed, knockAnimLib, 'exit', 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(1000)
         dealerIsHome = true
         TriggerEvent('chat:addMessage', {
             color = { 255, 0, 0 },
             multiline = true,
             args = {
-                Lang:t("info.dealer_name", { dealerName = Config.Dealers[currentDealer]["name"] }),
-                Lang:t("info.fred_knock_message", { firstName = myData.charinfo.firstname })
+                Lang:t('info.dealer_name', { dealerName = Config.Dealers[currentDealer]['name'] }),
+                Lang:t('info.fred_knock_message', { firstName = myData.charinfo.firstname })
             }
         })
-        exports['qb-core']:DrawText(Lang:t("info.other_dealers_button"), 'left')
+        exports['qb-core']:DrawText(Lang:t('info.other_dealers_button'), 'left')
         AwaitingInput()
     else
-        TriggerServerEvent("InteractSound_SV:PlayOnSource", "knock_door", 0.2)
+        TriggerServerEvent('InteractSound_SV:PlayOnSource', 'knock_door', 0.2)
         Wait(100)
         while (not HasAnimDictLoaded(knockAnimLib)) do
             RequestAnimDict(knockAnimLib)
@@ -86,17 +72,17 @@ local function KnockDoorAnim(home)
         end
         TaskPlayAnim(PlayerPed, knockAnimLib, knockAnim, 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(3500)
-        TaskPlayAnim(PlayerPed, knockAnimLib, "exit", 3.0, 3.0, -1, 1, 0, false, false, false)
+        TaskPlayAnim(PlayerPed, knockAnimLib, 'exit', 3.0, 3.0, -1, 1, 0, false, false, false)
         Wait(1000)
-        QBCore.Functions.Notify(Lang:t("info.no_one_home"), 'error')
+        QBCore.Functions.Notify(Lang:t('info.no_one_home'), 'error')
     end
 end
 
 local function KnockDealerDoor()
     GetClosestDealer()
     local hours = GetClockHours()
-    local min = Config.Dealers[currentDealer]["time"]["min"]
-    local max = Config.Dealers[currentDealer]["time"]["max"]
+    local min = Config.Dealers[currentDealer]['time']['min']
+    local max = Config.Dealers[currentDealer]['time']['max']
     if max < min then
         if hours <= max then
             KnockDoorAnim(true)
@@ -115,10 +101,10 @@ local function KnockDealerDoor()
 end
 
 local function RandomDeliveryItemOnRep()
-    local myRep = QBCore.Functions.GetPlayerData().metadata["dealerrep"]
+    local myRep = QBCore.Functions.GetPlayerData().metadata['dealerrep']
     local availableItems = {}
     for k, _ in pairs(Config.DeliveryItems) do
-        if Config.DeliveryItems[k]["minrep"] <= myRep then
+        if Config.DeliveryItems[k]['minrep'] <= myRep then
             availableItems[#availableItems + 1] = k
         end
     end
@@ -132,7 +118,7 @@ local function RequestDelivery()
         local amount = math.random(1, 3)
         local item = RandomDeliveryItemOnRep()
 
-        QBCore.Functions.Notify(Lang:t("info.delivery_search"), 'success')
+        QBCore.Functions.Notify(Lang:t('info.delivery_search'), 'success')
         if Config.NearbyDeliveries == true then
             local playerPed = PlayerPedId()
             local playerCoords = GetEntityCoords(playerPed)
@@ -149,21 +135,21 @@ local function RequestDelivery()
             if #nearbyLocations > 0 then
                 local selectedLocation = nearbyLocations[math.random(1, #nearbyLocations)]
                 waitingDelivery = {
-                    ["coords"] = selectedLocation.coords,
-                    ["locationLabel"] = selectedLocation.label,
-                    ["amount"] = amount,
-                    ["dealer"] = currentDealer,
-                    ["itemData"] = Config.DeliveryItems[item],
-                    ["item"] = item
+                    ['coords'] = selectedLocation.coords,
+                    ['locationLabel'] = selectedLocation.label,
+                    ['amount'] = amount,
+                    ['dealer'] = currentDealer,
+                    ['itemData'] = Config.DeliveryItems[item],
+                    ['item'] = item
                 }
                 if Config.Debug == true then
                     print(selectedLocation.coords)
                     print(selectedLocation.label)
                 end
             else
-                QBCore.Functions.Notify(Lang:t("error.delivery_fail"), 'error')
+                QBCore.Functions.Notify(Lang:t('error.delivery_fail'), 'error')
                 if Config.Debug == true then
-                    print("No suitable delivery location found within 2000 units.")
+                    print('No suitable delivery location found within 2000 units.')
                 end
                 return
             end
@@ -171,35 +157,35 @@ local function RequestDelivery()
             local location = math.random(1, #Config.DeliveryLocations)
 
             waitingDelivery = {
-                ["coords"] = Config.DeliveryLocations[location]["coords"],
-                ["locationLabel"] = Config.DeliveryLocations[location]["label"],
-                ["amount"] = amount,
-                ["dealer"] = currentDealer,
-                ["itemData"] = Config.DeliveryItems[item],
-                ["item"] = item
+                ['coords'] = Config.DeliveryLocations[location]['coords'],
+                ['locationLabel'] = Config.DeliveryLocations[location]['label'],
+                ['amount'] = amount,
+                ['dealer'] = currentDealer,
+                ['itemData'] = Config.DeliveryItems[item],
+                ['item'] = item
             }
             if Config.Debug == true then
-                print(Config.DeliveryLocations[location]["coords"])
-                print(Config.DeliveryLocations[location]["label"])
+                print(Config.DeliveryLocations[location]['coords'])
+                print(Config.DeliveryLocations[location]['label'])
             end
         end
 
-        QBCore.Functions.Notify(Lang:t("info.sending_delivery_email"), 'success')
+        QBCore.Functions.Notify(Lang:t('info.sending_delivery_email'), 'success')
         TriggerServerEvent('qb-drugs:server:giveDeliveryItems', waitingDelivery)
         SetTimeout(2000, function()
             TriggerServerEvent('qb-phone:server:sendNewMail', {
-                sender = Config.Dealers[currentDealer]["name"],
-                subject = "Delivery Location",
-                message = Lang:t("info.delivery_info_email", { itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery["itemData"]["item"]]["label"] }),
+                sender = Config.Dealers[currentDealer]['name'],
+                subject = 'Delivery Location',
+                message = Lang:t('info.delivery_info_email', { itemAmount = amount, itemLabel = QBCore.Shared.Items[waitingDelivery['itemData']['item']]['label'] }),
                 button = {
                     enabled = true,
-                    buttonEvent = "qb-drugs:client:setLocation",
+                    buttonEvent = 'qb-drugs:client:setLocation',
                     buttonData = waitingDelivery
                 }
             })
         end)
     else
-        QBCore.Functions.Notify(Lang:t("error.pending_delivery"), 'error')
+        QBCore.Functions.Notify(Lang:t('error.pending_delivery'), 'error')
     end
 end
 
@@ -213,8 +199,6 @@ local function DeliveryTimer()
     end)
 end
 
--- Fixed:
--- swapped the condition to `random <= Config.PoliceCallChance` so "Config.PoliceCallChance", represents the call probability.
 local function PoliceCall()
     local random = math.random(1, 100)
     if random <= Config.PoliceCallChance then
@@ -225,9 +209,9 @@ end
 local function DeliverStuff()
     if deliveryTimeout > 0 then
         Wait(500)
-        TaskStartScenarioInPlace(PlayerPedId(), "PROP_HUMAN_BUM_BIN", 0, true)
+        TaskStartScenarioInPlace(PlayerPedId(), 'PROP_HUMAN_BUM_BIN', 0, true)
         PoliceCall()
-        QBCore.Functions.Progressbar("work_dropbox", Lang:t("info.delivering_products"), 3500, false, true, {
+        QBCore.Functions.Progressbar('work_dropbox', Lang:t('info.delivering_products'), 3500, false, true, {
             disableMovement = true,
             disableCarMovement = true,
             disableMouse = false,
@@ -251,7 +235,7 @@ end
 
 local function SetMapBlip(x, y)
     SetNewWaypoint(x, y)
-    QBCore.Functions.Notify(Lang:t("success.route_has_been_set"), 'success');
+    QBCore.Functions.Notify(Lang:t('success.route_has_been_set'), 'success');
 end
 
 -- PolyZone specific functions
@@ -267,7 +251,8 @@ function AwaitingInput()
                 end
             elseif dealerIsHome then
                 if IsControlJustPressed(0, 38) then
-                    OpenDealerShop()
+                    GetClosestDealer()
+                    TriggerServerEvent('qb-drugs:server:dealerShop', currentDealer)
                     exports['qb-core']:KeyPressed()
                     waitingKeyPress = false
                 end
@@ -291,8 +276,8 @@ function InitZones()
     if next(Config.Dealers) == nil then return end
     if Config.UseTarget then
         for k, v in pairs(Config.Dealers) do
-            exports["qb-target"]:AddBoxZone("dealer_" .. k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
-                name = "dealer_" .. k,
+            exports['qb-target']:AddBoxZone('dealer_' .. k, vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
+                name = 'dealer_' .. k,
                 heading = v.heading,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
@@ -301,15 +286,15 @@ function InitZones()
                 options = {
                     {
                         icon = 'fas fa-user-secret',
-                        label = Lang:t("info.target_request"),
+                        label = Lang:t('info.target_request'),
                         action = function()
                             RequestDelivery()
                         end,
                         canInteract = function()
                             GetClosestDealer()
                             local hours = GetClockHours()
-                            local min = Config.Dealers[currentDealer]["time"]["min"]
-                            local max = Config.Dealers[currentDealer]["time"]["max"]
+                            local min = Config.Dealers[currentDealer]['time']['min']
+                            local max = Config.Dealers[currentDealer]['time']['max']
                             if max < min then
                                 if hours <= max then
                                     if not waitingDelivery then
@@ -331,15 +316,16 @@ function InitZones()
                     },
                     {
                         icon = 'fas fa-user-secret',
-                        label = Lang:t("info.target_openshop"),
+                        label = Lang:t('info.target_openshop'),
                         action = function()
-                            OpenDealerShop()
+                            GetClosestDealer()
+                            TriggerServerEvent('qb-drugs:server:dealerShop', currentDealer)
                         end,
                         canInteract = function()
                             GetClosestDealer()
                             local hours = GetClockHours()
-                            local min = Config.Dealers[currentDealer]["time"]["min"]
-                            local max = Config.Dealers[currentDealer]["time"]["max"]
+                            local min = Config.Dealers[currentDealer]['time']['min']
+                            local max = Config.Dealers[currentDealer]['time']['max']
                             if max < min then
                                 if hours <= max then
                                     return true
@@ -362,21 +348,21 @@ function InitZones()
         for k, v in pairs(Config.Dealers) do
             dealerPoly[#dealerPoly + 1] = BoxZone:Create(vector3(v.coords.x, v.coords.y, v.coords.z), 1.5, 1.5, {
                 heading = -20,
-                name = "dealer_" .. k,
+                name = 'dealer_' .. k,
                 debugPoly = false,
                 minZ = v.coords.z - 1,
                 maxZ = v.coords.z + 1,
             })
         end
-        dealerCombo = ComboZone:Create(dealerPoly, { name = "dealerPoly" })
+        dealerCombo = ComboZone:Create(dealerPoly, { name = 'dealerPoly' })
         if not dealerCombo then return end
         dealerCombo:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 if not dealerIsHome then
-                    exports['qb-core']:DrawText(Lang:t("info.knock_button"), 'left')
+                    exports['qb-core']:DrawText(Lang:t('info.knock_button'), 'left')
                     AwaitingInput()
                 elseif dealerIsHome then
-                    exports['qb-core']:DrawText(Lang:t("info.other_dealers_button"), 'left')
+                    exports['qb-core']:DrawText(Lang:t('info.other_dealers_button'), 'left')
                     AwaitingInput()
                 end
             else
@@ -401,31 +387,31 @@ RegisterNetEvent('qb-drugs:client:updateDealerItems', function(itemData, amount)
 end)
 
 RegisterNetEvent('qb-drugs:client:setDealerItems', function(itemData, amount, dealer)
-    Config.Dealers[dealer]["products"][itemData.slot].amount = Config.Dealers[dealer]["products"][itemData.slot].amount - amount
+    Config.Dealers[dealer]['products'][itemData.slot].amount = Config.Dealers[dealer]['products'][itemData.slot].amount - amount
 end)
 
 RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
     if activeDelivery then
-        SetMapBlip(activeDelivery["coords"]["x"], activeDelivery["coords"]["y"])
-        QBCore.Functions.Notify(Lang:t("error.pending_delivery"), 'error')
+        SetMapBlip(activeDelivery['coords']['x'], activeDelivery['coords']['y'])
+        QBCore.Functions.Notify(Lang:t('error.pending_delivery'), 'error')
         return
     end
     activeDelivery = locationData
     deliveryTimeout = 300
     DeliveryTimer()
-    SetMapBlip(activeDelivery["coords"].x, activeDelivery["coords"].y)
+    SetMapBlip(activeDelivery['coords'].x, activeDelivery['coords'].y)
     if Config.UseTarget then
-        exports["qb-target"]:AddBoxZone('drugDeliveryZone', vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
+        exports['qb-target']:AddBoxZone('drugDeliveryZone', vector3(activeDelivery['coords'].x, activeDelivery['coords'].y, activeDelivery['coords'].z), 1.5, 1.5, {
             name = 'drugDeliveryZone',
             heading = 0,
-            minZ = activeDelivery["coords"].z - 1,
-            maxZ = activeDelivery["coords"].z + 1,
+            minZ = activeDelivery['coords'].z - 1,
+            maxZ = activeDelivery['coords'].z + 1,
             debugPoly = false
         }, {
             options = {
                 {
                     icon = 'fas fa-user-secret',
-                    label = Lang:t("info.target_deliver"),
+                    label = Lang:t('info.target_deliver'),
                     action = function()
                         DeliverStuff()
                         waitingDelivery = nil
@@ -440,17 +426,17 @@ RegisterNetEvent('qb-drugs:client:setLocation', function(locationData)
             distance = 1.5
         })
     else
-        drugDeliveryZone = BoxZone:Create(vector3(activeDelivery["coords"].x, activeDelivery["coords"].y, activeDelivery["coords"].z), 1.5, 1.5, {
+        drugDeliveryZone = BoxZone:Create(vector3(activeDelivery['coords'].x, activeDelivery['coords'].y, activeDelivery['coords'].z), 1.5, 1.5, {
             heading = 0,
-            name = "drugDelivery",
+            name = 'drugDelivery',
             debugPoly = false,
-            minZ = activeDelivery["coords"].z - 1,
-            maxZ = activeDelivery["coords"].z + 1,
+            minZ = activeDelivery['coords'].z - 1,
+            maxZ = activeDelivery['coords'].z + 1,
         })
         drugDeliveryZone:onPlayerInOut(function(isPointInside)
             if isPointInside then
                 local inDeliveryZone = true
-                exports['qb-core']:DrawText(Lang:t("info.deliver_items_button", { itemAmount = activeDelivery["amount"], itemLabel = QBCore.Shared.Items[activeDelivery["itemData"]["item"]]["label"] }), 'left')
+                exports['qb-core']:DrawText(Lang:t('info.deliver_items_button', { itemAmount = activeDelivery['amount'], itemLabel = QBCore.Shared.Items[activeDelivery['itemData']['item']]['label'] }), 'left')
                 CreateThread(function()
                     while inDeliveryZone do
                         if IsControlJustPressed(0, 38) then
@@ -473,21 +459,21 @@ end)
 RegisterNetEvent('qb-drugs:client:sendDeliveryMail', function(type, deliveryData)
     if type == 'perfect' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Delivery",
-            message = Lang:t("info.perfect_delivery", { dealerName = Config.Dealers[deliveryData["dealer"]]["name"] })
+            sender = Config.Dealers[deliveryData['dealer']]['name'],
+            subject = 'Delivery',
+            message = Lang:t('info.perfect_delivery', { dealerName = Config.Dealers[deliveryData['dealer']]['name'] })
         })
     elseif type == 'bad' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Delivery",
-            message = Lang:t("info.bad_delivery")
+            sender = Config.Dealers[deliveryData['dealer']]['name'],
+            subject = 'Delivery',
+            message = Lang:t('info.bad_delivery')
         })
     elseif type == 'late' then
         TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = Config.Dealers[deliveryData["dealer"]]["name"],
-            subject = "Delivery",
-            message = Lang:t("info.late_delivery")
+            sender = Config.Dealers[deliveryData['dealer']]['name'],
+            subject = 'Delivery',
+            message = Lang:t('info.late_delivery')
         })
     end
 end)

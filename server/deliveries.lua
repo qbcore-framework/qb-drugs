@@ -43,7 +43,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
     local itemAmount = deliveryData.amount
     local payout = deliveryData.itemData.payout * itemAmount
     local copsOnline = QBCore.Functions.GetDutyCount('police')
-    local curRep = Player.PlayerData.metadata['dealerrep']
+    local curRep = Player.Functions.GetRep('dealer')
     local invItem = Player.Functions.GetItemByName(item)
     if inTime then
         if invItem and invItem.amount >= itemAmount then -- on time correct amount
@@ -68,7 +68,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
             TriggerClientEvent('QBCore:Notify', src, Lang:t('success.order_delivered'), 'success')
             SetTimeout(math.random(5000, 10000), function()
                 TriggerClientEvent('qb-drugs:client:sendDeliveryMail', src, 'perfect', deliveryData)
-                Player.Functions.SetMetaData('dealerrep', (curRep + Config.DeliveryRepGain))
+                Player.Functions.AddRep('dealer', Config.DeliveryRepGain)
             end)
         else
             TriggerClientEvent('QBCore:Notify', src, Lang:t('error.order_not_right'), 'error') -- on time incorrect amount
@@ -81,11 +81,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
             end
             SetTimeout(math.random(5000, 10000), function()
                 TriggerClientEvent('qb-drugs:client:sendDeliveryMail', src, 'bad', deliveryData)
-                if curRep - 1 > 0 then
-                    Player.Functions.SetMetaData('dealerrep', (curRep - Config.DeliveryRepLoss))
-                else
-                    Player.Functions.SetMetaData('dealerrep', 0)
-                end
+                Player.Functions.RemoveRep('dealer', Config.DeliveryRepLoss)
             end)
         end
     else
@@ -96,11 +92,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
             TriggerClientEvent('qb-inventory:client:ItemBox', src, QBCore.Shared.Items[item], 'remove')
             SetTimeout(math.random(5000, 10000), function()
                 TriggerClientEvent('qb-drugs:client:sendDeliveryMail', src, 'late', deliveryData)
-                if curRep - 1 > 0 then
-                    Player.Functions.SetMetaData('dealerrep', (curRep - Config.DeliveryRepLoss))
-                else
-                    Player.Functions.SetMetaData('dealerrep', 0)
-                end
+                Player.Functions.RemoveRep('dealer', Config.DeliveryRepLoss)
             end)
         else
             if invItem then -- late incorrect amount
@@ -112,11 +104,7 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
                 TriggerClientEvent('qb-inventory:client:ItemBox', src, QBCore.Shared.Items[item], 'remove')
                 SetTimeout(math.random(5000, 10000), function()
                     TriggerClientEvent('qb-drugs:client:sendDeliveryMail', src, 'late', deliveryData)
-                    if curRep - 1 > 0 then
-                        Player.Functions.SetMetaData('dealerrep', (curRep - Config.DeliveryRepLoss))
-                    else
-                        Player.Functions.SetMetaData('dealerrep', 0)
-                    end
+                    Player.Functions.RemoveRep('dealer', Config.DeliveryRepLoss)
                 end)
             end
         end
@@ -133,10 +121,11 @@ RegisterNetEvent('qb-drugs:server:dealerShop', function(currentDealer)
     if not dealerData then return end
     local dist = #(playerCoords - vector3(dealerData.coords.x, dealerData.coords.y, dealerData.coords.z))
     if dist > 5.0 then return end
+    local curRep = Player.Functions.GetRep('dealer')
     local repItems = {}
     for k in pairs(dealerData.products) do
-        if Player.PlayerData.metadata['dealerrep'] >= dealerData['products'][k].minrep then
-            repItems.items[k] = dealerData['products'][k]
+        if curRep >= dealerData['products'][k].minrep then
+            repItems[#repItems+1] = dealerData['products'][k]
         end
     end
     exports['qb-inventory']:CreateShop({

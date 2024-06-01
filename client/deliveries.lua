@@ -101,7 +101,7 @@ local function KnockDealerDoor()
 end
 
 local function RandomDeliveryItemOnRep()
-    local myRep = QBCore.Functions.GetPlayerData().metadata['dealerrep']
+    local myRep = QBCore.Functions.GetPlayerData().metadata['rep']['dealer'] or 0
     local availableItems = {}
     for k, _ in pairs(Config.DeliveryItems) do
         if Config.DeliveryItems[k]['minrep'] <= myRep then

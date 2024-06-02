@@ -43,7 +43,6 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function(deliveryData, inTim
     local itemAmount = deliveryData.amount
     local payout = deliveryData.itemData.payout * itemAmount
     local copsOnline = QBCore.Functions.GetDutyCount('police')
-    local curRep = Player.Functions.GetRep('dealer')
     local invItem = Player.Functions.GetItemByName(item)
     if inTime then
         if invItem and invItem.amount >= itemAmount then -- on time correct amount
@@ -121,6 +120,7 @@ RegisterNetEvent('qb-drugs:server:dealerShop', function(currentDealer)
     if not dealerData then return end
     local dist = #(playerCoords - vector3(dealerData.coords.x, dealerData.coords.y, dealerData.coords.z))
     if dist > 5.0 then return end
+    local curRep = Player.Functions.GetRep('dealer')
     local repItems = {}
     for k in pairs(dealerData.products) do
         if curRep >= dealerData['products'][k].minrep then

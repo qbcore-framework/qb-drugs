@@ -121,7 +121,6 @@ RegisterNetEvent('qb-drugs:server:dealerShop', function(currentDealer)
     if not dealerData then return end
     local dist = #(playerCoords - vector3(dealerData.coords.x, dealerData.coords.y, dealerData.coords.z))
     if dist > 5.0 then return end
-    local curRep = Player.Functions.GetRep('dealer')
     local repItems = {}
     for k in pairs(dealerData.products) do
         if curRep >= dealerData['products'][k].minrep then
